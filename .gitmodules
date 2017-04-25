@@ -28,3 +28,9 @@
 [submodule "ThirdParty/SwmmInterface"]
 	path = ThirdParty/SwmmInterface
 	url = https://github.com/ufz/SwmmInterface.git
+[submodule "ThirdParty/dune/dune-common"]
+	path = ThirdParty/dune/dune-common
+	url = https://gitlab.dune-project.org/core/dune-common.git
+[submodule "ThirdParty/dune/dune-geometry"]
+	path = ThirdParty/dune/dune-geometry
+	url = https://gitlab.dune-project.org/core/dune-geometry.git
