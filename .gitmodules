@@ -37,3 +37,6 @@
 [submodule "ThirdParty/dune/dune-grid"]
 	path = ThirdParty/dune/dune-grid
 	url = https://gitlab.dune-project.org/core/dune-grid.git
+[submodule "ThirdParty/dune/dune-uggrid"]
+	path = ThirdParty/dune/dune-uggrid
+	url = https://gitlab.dune-project.org/staging/dune-uggrid.git
