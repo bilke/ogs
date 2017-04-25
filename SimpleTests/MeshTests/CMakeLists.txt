@@ -1,4 +1,16 @@
 # Create the executable
+add_executable(DuneGrid
+    DuneGrid.cpp
+    ${SOURCES}
+    ${HEADERS}
+)
+
+target_link_libraries(DuneGrid
+    dunegrid
+    BaseLib
+)
+
+# Create the executable
 add_executable(MeshRead
     MeshRead.cpp
     ${SOURCES}
