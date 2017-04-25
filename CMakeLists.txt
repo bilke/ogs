@@ -244,17 +244,17 @@ include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/vtkGUISupportQ
 
 # DUNE
 # TODO:
-#  - Maybe move to ThirdParty/dune/CMakeLists.txt
 #  - Forward cmake config to dune (especially compiler flags)
-add_custom_target(Dune
-    ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/dune/dune-common/bin/dunecontrol
-        --builddir=${CMAKE_CURRENT_BUILD_DIR}/ThirdParty/dune all
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/dune
-    )
 include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/dune/dune-common)
 include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/dune/dune-grid)
 include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/dune/dune-geometry)
+include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/dune/dune-uggrid)
 
+link_directories(
+    ${CMAKE_CURRENT_BINARY_DIR}/ThirdParty/dune/dune-common/lib
+    ${CMAKE_CURRENT_BINARY_DIR}/ThirdParty/dune/dune-grid/lib
+    ${CMAKE_CURRENT_BINARY_DIR}/ThirdParty/dune/dune-geometry/lib
+    ${CMAKE_CURRENT_BINARY_DIR}/ThirdParty/dune/dune-uggrid/lib)
 
 add_subdirectory( Applications )
 add_subdirectory( BaseLib )

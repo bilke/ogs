@@ -54,3 +54,5 @@ endif()
 if(OGS_BUILD_METIS)
     include(${CMAKE_SOURCE_DIR}/scripts/cmake/MetisSetup.cmake)
 endif()
+
+add_subdirectory(dune)
