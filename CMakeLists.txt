@@ -241,6 +241,21 @@ include_directories( SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/autocheck/inc
 include_directories( SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tclap/include )
 include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/vtkGUISupportQt)
 
+
+# DUNE
+# TODO:
+#  - Maybe move to ThirdParty/dune/CMakeLists.txt
+#  - Forward cmake config to dune (especially compiler flags)
+add_custom_target(Dune
+    ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/dune/dune-common/bin/dunecontrol
+        --builddir=${CMAKE_CURRENT_BUILD_DIR}/ThirdParty/dune all
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/dune
+    )
+include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/dune/dune-common)
+include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/dune/dune-grid)
+include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/dune/dune-geometry)
+
+
 add_subdirectory( Applications )
 add_subdirectory( BaseLib )
 # TODO This is a hack but we have to make sure that Boost is built first
