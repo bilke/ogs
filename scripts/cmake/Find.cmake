@@ -173,3 +173,13 @@ find_package(CVODE)
 if(CVODE_FOUND)
     add_definitions(-DCVODE_FOUND)
 endif() # CVODE_FOUND
+
+# dune
+set(CMAKE_PREFIX_PATH
+    ${PROJECT_BINARY_DIR}/ThirdParty/dune
+    ${CMAKE_PREFIX_PATH}
+)
+find_package(dune-common CONFIG)
+find_package(dune-geometry CONFIG)
+find_package(dune-grid CONFIG)
+find_package(dune-uggrid CONFIG)

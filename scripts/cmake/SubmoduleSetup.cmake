@@ -24,6 +24,14 @@ endif()
 if(OGS_BUILD_SWMM)
     list(APPEND REQUIRED_SUBMODULES ThirdParty/SwmmInterface)
 endif()
+if(OGS_USE_DUNE)
+    list(APPEND REQUIRED_SUBMODULES
+        ThirdParty/dune/dune-common
+        ThirdParty/dune/dune-geometry
+        ThirdParty/dune/dune-grid
+        ThirdParty/dune/dune-uggrid
+    )
+endif()
 
 foreach(SUBMODULE ${REQUIRED_SUBMODULES})
     execute_process(

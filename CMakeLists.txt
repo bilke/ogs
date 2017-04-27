@@ -73,6 +73,8 @@ endif()
 
 option(OGS_BUILD_METIS "Should metis and the partmesh util be built?" OFF)
 
+option(OGS_USE_DUNE "Should Dune be built?" OFF)
+
 option(OGS_NO_EXTERNAL_LIBS "Builds OGS without any external dependencies." OFF)
 
 option(OGS_INSITU "Builds OGS with insitu visualization capabilities." OFF)
@@ -240,21 +242,6 @@ include_directories( SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/gtest/include
 include_directories( SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/autocheck/include )
 include_directories( SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tclap/include )
 include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/vtkGUISupportQt)
-
-
-# DUNE
-# TODO:
-#  - Forward cmake config to dune (especially compiler flags)
-include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/dune/dune-common)
-include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/dune/dune-grid)
-include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/dune/dune-geometry)
-include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/dune/dune-uggrid)
-
-link_directories(
-    ${CMAKE_CURRENT_BINARY_DIR}/ThirdParty/dune/dune-common/lib
-    ${CMAKE_CURRENT_BINARY_DIR}/ThirdParty/dune/dune-grid/lib
-    ${CMAKE_CURRENT_BINARY_DIR}/ThirdParty/dune/dune-geometry/lib
-    ${CMAKE_CURRENT_BINARY_DIR}/ThirdParty/dune/dune-uggrid/lib)
 
 add_subdirectory( Applications )
 add_subdirectory( BaseLib )

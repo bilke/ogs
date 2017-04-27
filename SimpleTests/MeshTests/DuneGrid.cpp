@@ -44,5 +44,5 @@ int main(int argc, char *argv[])
     cmd.add(outdir_arg);
 
 
-    Dune::UGGrid<3> grid;
+    // Dune::UGGrid<3> grid;
 }

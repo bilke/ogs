@@ -1,21 +1,13 @@
-# Create the executable
-add_executable(DuneGrid
-    DuneGrid.cpp
-    ${SOURCES}
-    ${HEADERS}
-)
+if(OGS_USE_DUNE)
+    add_executable(DuneGrid DuneGrid.cpp)
 
-target_link_libraries(DuneGrid
-    dunegrid
-    BaseLib
-)
+    target_link_libraries(DuneGrid
+        dunegrid
+        BaseLib
+    )
+endif()
 
-# Create the executable
-add_executable(MeshRead
-    MeshRead.cpp
-    ${SOURCES}
-    ${HEADERS}
-)
+add_executable(MeshRead MeshRead.cpp)
 
 target_link_libraries(MeshRead
     MeshLib
@@ -25,12 +17,7 @@ target_link_libraries(MeshRead
     ${BOOST_LIBRARIES}
 )
 
-# Create MeshSearchTest executable
-add_executable(MeshSearchTest
-    MeshSearchTest.cpp
-    ${SOURCES}
-    ${HEADERS}
-)
+add_executable(MeshSearchTest MeshSearchTest.cpp)
 
 target_link_libraries(MeshSearchTest
     MeshLib
