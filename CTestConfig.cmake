@@ -1,0 +1,6 @@
+set(CTEST_PROJECT_NAME "ogs")
+set(CTEST_NIGHTLY_START_TIME "01:00:00 UTC")
+set(CTEST_DROP_METHOD "https")
+set(CTEST_DROP_SITE "cdash.opengeosys.org")
+set(CTEST_DROP_LOCATION "/submit.php?project=ogs")
+set(CTEST_DROP_SITE_CDASH TRUE)
