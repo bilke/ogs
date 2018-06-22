@@ -24,10 +24,7 @@ void applyKnownSolution(PETScMatrix& A, PETScVector& b, PETScVector& x,
                         const std::vector<PetscInt>& vec_knownX_id,
                         const std::vector<PetscScalar>& vec_knownX_x)
 {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-    INFO("[%d] applying %d dirichlet conditions", rank, vec_knownX_id.size());
+    //DBUG("applying %d dirichlet conditions", vec_knownX_id.size());
     A.finalizeAssembly();
     x.finalizeAssembly();
     if (vec_knownX_id.size() > 0)
