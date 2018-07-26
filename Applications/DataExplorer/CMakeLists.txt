@@ -32,6 +32,7 @@ include_directories(
 set(CMAKE_AUTOMOC TRUE)
 set(CMAKE_AUTOUIC TRUE)
 set(CMAKE_AUTORCC TRUE)
+set_property(PROPERTY AUTOGEN_SOURCE_GROUP "Moc Files")
 
 # Add subprojects
 add_subdirectory(Base)

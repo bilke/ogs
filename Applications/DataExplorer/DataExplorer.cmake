@@ -27,8 +27,6 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}/VtkVis/VtkVis_autogen/include
 )
 
-# Put moc files in a project folder
-source_group("Moc Files" REGULAR_EXPRESSION "moc_.*")
 file(GLOB UIS *.ui)
 source_group("UI Files" FILES ${UIS})
 
