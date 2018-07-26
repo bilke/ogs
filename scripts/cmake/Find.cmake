@@ -86,11 +86,7 @@ if(OGS_NO_EXTERNAL_LIBS)
     return()
 endif() # OGS_NO_EXTERNAL_LIBS
 
-find_package(OpenMP QUIET)
-if(OPENMP_FOUND)
-    add_compile_options(${OpenMP_CXX_FLAGS})
-    message(STATUS "OpenMP enabled.")
-endif()
+find_package(OpenMP)
 
 find_package(Metis QUIET)
 

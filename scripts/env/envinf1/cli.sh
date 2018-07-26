@@ -1,6 +1,6 @@
 module use /global/apps/modulefiles
 
-module load cmake
+module load cmake/3.12.0-1
 module load gcc/6.2.0-1
 module load ninja/1.8.2
 module load git

@@ -35,7 +35,7 @@ set_target_properties(MathLib PROPERTIES LINKER_LANGUAGE CXX)
 
 target_link_libraries(MathLib PUBLIC BaseLib logog)
 
-if (CVODE_FOUND)
+if(CVODE_FOUND)
     target_link_libraries(MathLib PUBLIC ${CVODE_LIBRARIES})
 endif()
 
@@ -43,17 +43,21 @@ if(LAPACK_FOUND)
     target_link_libraries(MathLib PUBLIC ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
 endif()
 
-if (OGS_USE_LIS)
+if(OGS_USE_LIS)
     target_link_libraries(MathLib PUBLIC ${LIS_LIBRARIES})
 endif()
 
-if (OGS_USE_MKL)
+if(OGS_USE_MKL)
     target_link_libraries(MathLib PUBLIC ${MKL_LIBRARIES})
 endif()
 
-if (OGS_USE_PETSC)
+if(OGS_USE_PETSC)
     target_include_directories(MathLib PUBLIC ${PETSC_INCLUDE_DIRS})
     target_link_libraries(MathLib PUBLIC ${PETSC_LIBRARIES})
+endif()
+
+if(OPENMP_FOUND)
+    target_link_libraries(MathLib PUBLIC OpenMP::OpenMP_CXX)
 endif()
 
 if(OGS_USE_PCH)
