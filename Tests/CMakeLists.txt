@@ -69,7 +69,15 @@ if(OGS_INSITU)
 endif()
 
 if(Qt5XmlPatterns_FOUND)
-    target_link_libraries(testrunner Qt5::Core Qt5::Gui Qt5::Xml Qt5::Network VtkVis QtDataView)
+    target_link_libraries(testrunner
+        Qt5::Core
+        Qt5::Gui
+        Qt5::Xml
+        Qt5::Network
+        VtkVis
+        QtDataView
+        ${VTK_LIBRARIES}
+    )
     if(CMAKE_CROSSCOMPILING)
         target_link_libraries(testrunner
             ${QT_XML_DEPS_LIBRARIES}
