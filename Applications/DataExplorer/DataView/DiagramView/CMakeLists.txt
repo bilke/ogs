@@ -38,6 +38,7 @@ add_library(QtDiagramView
     ${HEADERS}
     ${UIS}
 )
+install(TARGETS QtDiagramView LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 target_link_libraries(QtDiagramView
     PRIVATE BaseLib GeoLib QtBase DataHolderLib Qt5::Gui logog

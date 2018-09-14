@@ -20,6 +20,7 @@ include(${PROJECT_SOURCE_DIR}/scripts/cmake/OGSEnabledElements.cmake)
 
 # Create the library
 add_library(ApplicationsFileIO ${SOURCES})
+install(TARGETS ApplicationsFileIO LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 target_link_libraries(ApplicationsFileIO
     PUBLIC BaseLib DataHolderLib GeoLib MathLib logog
     PRIVATE MeshLib

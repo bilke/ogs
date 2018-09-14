@@ -11,6 +11,7 @@ list(APPEND SOURCES "${CMAKE_CURRENT_BINARY_DIR}/BuildInfo.cpp" BuildInfo.h)
 
 # Create the library
 add_library(BaseLib ${SOURCES})
+install(TARGETS BaseLib LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 include(GenerateExportHeader)
 generate_export_header(BaseLib)

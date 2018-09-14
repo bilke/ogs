@@ -3,6 +3,7 @@ GET_SOURCE_FILES(SOURCES_DataHolderLib)
 
 # Library
 add_library(DataHolderLib ${SOURCES_DataHolderLib})
+install(TARGETS DataHolderLib LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 target_link_libraries(DataHolderLib
     PUBLIC GeoLib MeshLib

@@ -5,6 +5,7 @@ APPEND_SOURCE_FILES(SOURCES SmallDeformation)
 APPEND_SOURCE_FILES(SOURCES SmallDeformation/LocalAssembler)
 
 add_library(LIE ${SOURCES})
+install(TARGETS LIE LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 target_link_libraries(LIE PUBLIC ProcessLib)
 
 include(HydroMechanics/Tests.cmake)

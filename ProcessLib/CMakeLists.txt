@@ -20,6 +20,7 @@ APPEND_SOURCE_FILES(SOURCES SourceTerms)
 APPEND_SOURCE_FILES(SOURCES Utils)
 
 add_library(ProcessLib ${SOURCES})
+install(TARGETS ProcessLib LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 target_link_libraries(ProcessLib
     PUBLIC BaseLib MaterialLib MathLib MeshLib NumLib logog MeshGeoToolsLib

@@ -23,6 +23,7 @@ include_directories(BEFORE ${METIS_PATH}/libmetis)
 file(GLOB metis_sources ${METIS_PATH}/libmetis/*.c)
 # Build libmetis.
 add_library(metis ${GKlib_sources} ${metis_sources})
+install(TARGETS metis LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 if(UNIX)
   target_link_libraries(metis m)

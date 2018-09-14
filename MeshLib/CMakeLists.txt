@@ -22,6 +22,7 @@ endif()
 
 # Create the library
 add_library(MeshLib ${SOURCES})
+install(TARGETS MeshLib LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 if(OGS_USE_PCH)
     cotire(MeshLib)
 endif()

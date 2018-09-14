@@ -26,6 +26,7 @@ endif()
 
 # Create the library
 add_library(MathLib ${SOURCES})
+install(TARGETS MathLib LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 include(GenerateExportHeader)
 generate_export_header(MathLib)

@@ -22,6 +22,7 @@ append_source_files(SOURCES PorousMedium/UnsaturatedProperty/RelativePermeabilit
 append_source_files(SOURCES TwoPhaseModels)
 
 add_library(MaterialLib ${SOURCES})
+install(TARGETS MaterialLib LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 include(GenerateExportHeader)
 generate_export_header(MaterialLib)

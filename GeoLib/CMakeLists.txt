@@ -12,6 +12,7 @@ endif()
 
 # Create the library
 add_library(GeoLib ${SOURCES})
+install(TARGETS GeoLib LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 target_link_libraries(GeoLib PUBLIC BaseLib MathLib logog PRIVATE tet)
 

@@ -128,6 +128,7 @@ add_library(VtkVis
     ${HEADERS}
     ${UIS}
 )
+install(TARGETS VtkVis LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 if(GEOTIFF_FOUND)
     include_directories(${GEOTIFF_INCLUDE_DIRS})
