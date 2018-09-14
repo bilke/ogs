@@ -1,10 +1,10 @@
 set(CPACK_GENERATOR TGZ)
 # Adds the binaries location to the LD_LIBRARY_PATH
-SET(CMAKE_INSTALL_RPATH "$ORIGIN;$ORIGIN/../lib")
+SET(CMAKE_INSTALL_RPATH "$ORIGIN;$ORIGIN/../${CMAKE_INSTALL_LIBDIR}")
 
 if(MODULE_CMD)
     message(STATUS "Found module cmd -> writing module file.")
-    execute_process(COMMAND ${MODULE_CMD} --terse list
+    execute_process(COMMAND ${MODULE_CMD} bash --terse list
         ERROR_VARIABLE MODULE_LIST_OUTPUT
     )
     string(REPLACE "\n" ";" MODULE_LIST_OUTPUT ${MODULE_LIST_OUTPUT})
