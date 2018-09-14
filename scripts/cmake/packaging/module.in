@@ -1,8 +1,6 @@
-#%Module1.0
-
-module-whatis OpenGeoSys @OGS_VERSION@
-conflict ogs
+whatis("OpenGeoSys @OGS_VERSION@")
+conflict("ogs")
 
 @MODULE_LOAD_STRING@
 
-prepend-path PATH @CMAKE_INSTALL_PREFIX@/bin
+prepend-path("PATH" "@CMAKE_INSTALL_PREFIX@/bin")
