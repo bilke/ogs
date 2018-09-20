@@ -81,7 +81,7 @@ pipeline {
           stages {
             stage("Configure") {
               steps {
-                sh 'conan user'
+                sh 'find $HOME/.conan -name "system_reqs.txt" -exec rm {} \\;'
                 script { configure {
                   cmakeOptions =
                     '-DOGS_CPU_ARCHITECTURE=generic ' +
@@ -125,6 +125,7 @@ pipeline {
             }
             stage("Configure (GUI)") {
               steps {
+                sh 'find $HOME/.conan -name "system_reqs.txt" -exec rm {} \\;'
                 script { configure {
                   cmakeOptions =
                     '-DOGS_CPU_ARCHITECTURE=generic ' +
@@ -146,7 +147,7 @@ pipeline {
                 recordIssues enabledForFailure: true, filters: [
                 excludeFile('.*qrc_icons\\.cpp.*'), excludeFile('.*QVTKWidget.*')],
                 tools: [[id: 'gmake-gcc-gui', name: 'GCC', tool: [$class: 'GnuMakeGcc']]],
-                unstableTotalAll: 24
+                unstableTotalAll: 21
                 // dir('build/docs') { stash(name: 'doxygen-gui') }
               } }
             }

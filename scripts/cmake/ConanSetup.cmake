@@ -64,6 +64,7 @@ if(OGS_BUILD_GUI)
         libgeotiff/1.4.2@bilke/stable
         Qt/5.11.0@bilke/stable
     )
+    list(REMOVE_ITEM CONAN_OPTIONS VTK:minimal=True)
     set(CONAN_OPTIONS ${CONAN_OPTIONS}
         VTK:minimal=False
         VTK:qt=True
