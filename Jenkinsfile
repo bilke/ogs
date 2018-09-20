@@ -79,50 +79,6 @@ pipeline {
             }
           }
           stages {
-            stage("Configure") {
-              steps {
-                sh 'find $HOME/.conan -name "system_reqs.txt" -exec rm {} \\;'
-                script { configure {
-                  cmakeOptions =
-                    '-DOGS_CPU_ARCHITECTURE=generic ' +
-                    '-DDOCS_GENERATE_LOGFILE=ON ' + // redirects to build/DoxygenWarnings.log
-                    '-DOGS_USE_PYTHON=ON '
-                } }
-              }
-            }
-            stage("Build") {
-              steps {
-                script { build { } }
-              }
-              post { always {
-                recordIssues enabledForFailure: true,
-                tools: [[name: 'GCC', tool: [$class: 'GnuMakeGcc']]],
-                unstableTotalAll: 18
-              } }
-            }
-            stage("Test") {
-              steps {
-                script {
-                  build { target="tests" }
-                  build { target="ctest" }
-                }
-              }
-              post { always { publishReports { } } }
-            }
-            stage("Docs") {
-              steps {
-                script { build { target="doc" } }
-                // TODO: .*DOT_GRAPH_MAX_NODES.
-                //       .*potential recursive class relation.*
-                recordIssues tools: [[pattern: 'build/DoxygenWarnings.log',
-                  tool: [$class: 'Doxygen']]],
-                  unstableTotalAll: 23
-                dir('build/docs') { stash(name: 'doxygen') }
-                publishHTML(target: [allowMissing: false, alwaysLinkToLastBuild: true,
-                    keepAll: true, reportDir: 'build/docs', reportFiles: 'index.html',
-                    reportName: 'Doxygen'])
-              }
-            }
             stage("Configure (GUI)") {
               steps {
                 sh 'find $HOME/.conan -name "system_reqs.txt" -exec rm {} \\;'
