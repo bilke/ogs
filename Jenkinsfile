@@ -145,7 +145,7 @@ pipeline {
               post { always {
                 recordIssues enabledForFailure: true, filters: [
                 excludeFile('.*qrc_icons\\.cpp.*'), excludeFile('.*QVTKWidget.*')],
-                tools: [[name: 'GCC', tool: [$class: 'GnuMakeGcc']]],
+                tools: [[id: 'gmake-gcc-gui', name: 'GCC', tool: [$class: 'GnuMakeGcc']]],
                 unstableTotalAll: 24
                 // dir('build/docs') { stash(name: 'doxygen-gui') }
               } }
@@ -199,30 +199,38 @@ pipeline {
             expression { return stage_required.build || stage_required.full }
           }
           agent { label "envinf1"}
-          steps {
-            script {
-              configure {
-                cmakeOptions =
-                  '-DOGS_BUILD_UTILS=ON ' +
-                  '-DBUILD_SHARED_LIBS=ON '
-                env = 'envinf1/cli.sh'
-              }
-              build {
-                env = 'envinf1/cli.sh'
-                cmd_args = '-l 30'
-              }
-              build {
-                env = 'envinf1/cli.sh'
-                target = 'tests'
-              }
-              build {
-                env = 'envinf1/cli.sh'
-                target = 'ctest'
-              }
+          stages {
+            stage("Configure") {
+              steps { script {
+                configure {
+                  cmakeOptions =
+                    '-DOGS_BUILD_UTILS=ON ' +
+                    '-DBUILD_SHARED_LIBS=ON '
+                  env = 'envinf1/cli.sh'
+                }
+              } }
             }
-          }
-          post {
-            always { publishReports { } }
+            stage("Build") {
+              steps { script {
+                build {
+                  env = 'envinf1/cli.sh'
+                  cmd_args = '-l 30'
+                }
+              } }
+            }
+            stage("Test") {
+              steps { script {
+                build {
+                  env = 'envinf1/cli.sh'
+                  target = 'tests'
+                }
+                build {
+                  env = 'envinf1/cli.sh'
+                  target = 'ctest'
+                }
+              } }
+              post { always { publishReports { } } }
+            }
           }
         }
         stage('Envinf1 (parallel)') {
@@ -231,31 +239,39 @@ pipeline {
             expression { return stage_required.build || stage_required.full }
           }
           agent { label "envinf1"}
-          steps {
-            script {
-              configure {
-                cmakeOptions =
-                  '-DOGS_BUILD_UTILS=ON ' +
-                  '-DBUILD_SHARED_LIBS=ON ' +
-                  '-DOGS_USE_PETSC=ON '
-                env = 'envinf1/petsc.sh'
-              }
-              build {
-                env = 'envinf1/petsc.sh'
-                cmd_args = '-l 30'
-              }
-              build {
-                env = 'envinf1/petsc.sh'
-                target = 'tests'
-              }
-              build {
-                env = 'envinf1/petsc.sh'
-                target = 'ctest'
-              }
+          stages {
+            stage("Configure") {
+              steps { script {
+                configure {
+                  cmakeOptions =
+                    '-DOGS_BUILD_UTILS=ON ' +
+                    '-DBUILD_SHARED_LIBS=ON ' +
+                    '-DOGS_USE_PETSC=ON '
+                  env = 'envinf1/petsc.sh'
+                }
+              } }
             }
-          }
-          post {
-            always { publishReports { } }
+            stage("Build") {
+              steps { script {
+                build {
+                  env = 'envinf1/petsc.sh'
+                  cmd_args = '-l 30'
+                }
+              } }
+            }
+            stage("Test") {
+              steps { script {
+                build {
+                  env = 'envinf1/petsc.sh'
+                  target = 'tests'
+                }
+                build {
+                  env = 'envinf1/petsc.sh'
+                  target = 'ctest'
+                }
+              } }
+              post { always { publishReports { } } }
+            }
           }
         }
         // ************************** Windows **********************************
