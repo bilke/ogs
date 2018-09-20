@@ -78,55 +78,82 @@ pipeline {
               additionalBuildArgs '--pull'
             }
           }
-          steps {
-            script {
-              sh 'conan user'
-              configure {
-                cmakeOptions =
-                  '-DOGS_CPU_ARCHITECTURE=generic ' +
-                  '-DDOCS_GENERATE_LOGFILE=ON ' + // redirects to build/DoxygenWarnings.log
-                  '-DOGS_USE_PYTHON=ON '
+          stages {
+            stage("Configure") {
+              steps {
+                sh 'conan user'
+                script { configure {
+                  cmakeOptions =
+                    '-DOGS_CPU_ARCHITECTURE=generic ' +
+                    '-DDOCS_GENERATE_LOGFILE=ON ' + // redirects to build/DoxygenWarnings.log
+                    '-DOGS_USE_PYTHON=ON '
+                } }
               }
-              build { }
-              build { target="tests" }
-              build { target="ctest" }
-              build { target="doc" }
-              // TODO: .*DOT_GRAPH_MAX_NODES.
-              //       .*potential recursive class relation.*
-              recordIssues tools: [[pattern: 'build/DoxygenWarnings.log',
-                tool: [$class: 'Doxygen']]],
-                unstableTotalAll: 23
-              dir('build/docs') { stash(name: 'doxygen') }
-              publishHTML(target: [allowMissing: false, alwaysLinkToLastBuild: true,
-                  keepAll: true, reportDir: 'build/docs', reportFiles: 'index.html',
-                  reportName: 'Doxygen'])
-              configure {
-                cmakeOptions =
-                  '-DOGS_CPU_ARCHITECTURE=generic ' +
-                  '-DOGS_USE_PYTHON=ON ' +
-                  '-DOGS_BUILD_CLI=OFF ' +
-                  '-DOGS_USE_PCH=OFF ' +     // see #1992
-                  '-DOGS_BUILD_GUI=ON ' +
-                  '-DOGS_BUILD_UTILS=ON ' +
-                  '-DOGS_BUILD_TESTS=OFF '
-              }
-              build { }
-              build { target="doc" }
             }
-          }
-          post {
-            always {
-              publishReports { }
-              recordIssues enabledForFailure: true, filters: [
+            stage("Build") {
+              steps {
+                script { build { } }
+              }
+              post { always {
+                recordIssues enabledForFailure: true,
+                tools: [[name: 'GCC', tool: [$class: 'GnuMakeGcc']]],
+                unstableTotalAll: 18
+              } }
+            }
+            stage("Test") {
+              steps {
+                script {
+                  build { target="tests" }
+                  build { target="ctest" }
+                }
+              }
+              post { always { publishReports { } } }
+            }
+            stage("Docs") {
+              steps {
+                script { build { target="doc" } }
+                // TODO: .*DOT_GRAPH_MAX_NODES.
+                //       .*potential recursive class relation.*
+                recordIssues tools: [[pattern: 'build/DoxygenWarnings.log',
+                  tool: [$class: 'Doxygen']]],
+                  unstableTotalAll: 23
+                dir('build/docs') { stash(name: 'doxygen') }
+                publishHTML(target: [allowMissing: false, alwaysLinkToLastBuild: true,
+                    keepAll: true, reportDir: 'build/docs', reportFiles: 'index.html',
+                    reportName: 'Doxygen'])
+              }
+            }
+            stage("Configure (GUI)") {
+              steps {
+                script { configure {
+                  cmakeOptions =
+                    '-DOGS_CPU_ARCHITECTURE=generic ' +
+                    '-DOGS_USE_PYTHON=ON ' +
+                    '-DOGS_BUILD_CLI=OFF ' +
+                    '-DOGS_USE_PCH=OFF ' +     // see #1992
+                    '-DOGS_BUILD_GUI=ON ' +
+                    '-DOGS_BUILD_UTILS=ON ' +
+                    '-DOGS_BUILD_TESTS=OFF '
+                } }
+              }
+            }
+            stage("Build (GUI)") {
+              steps {
+                script { build { } }
+                // build { target="doc" }
+              }
+              post { always {
+                recordIssues enabledForFailure: true, filters: [
                 excludeFile('.*qrc_icons\\.cpp.*'), excludeFile('.*QVTKWidget.*')],
                 tools: [[name: 'GCC', tool: [$class: 'GnuMakeGcc']]],
                 unstableTotalAll: 24
-            }
-            success {
-              dir('build/docs') { stash(name: 'doxygen') }
-              archiveArtifacts 'build/*.tar.gz,build/conaninfo.txt'
+                // dir('build/docs') { stash(name: 'doxygen-gui') }
+              } }
             }
           }
+          post { success {
+            archiveArtifacts 'build/*.tar.gz,build/conaninfo.txt'
+          }  }
         }
         // ********************* Docker-Conan-Debug ****************************
         stage('Docker-Conan-Debug') {
