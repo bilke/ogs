@@ -170,20 +170,26 @@ pipeline {
               additionalBuildArgs '--pull'
             }
           }
-          steps {
-            script {
-              sh 'conan user'
-              configure {
-                cmakeOptions =
-                  '-DOGS_CPU_ARCHITECTURE=generic '
-                config = 'Debug'
-              }
-              build { }
-              build { target = 'tests' }
+          stages {
+            stage("Configure") {
+              steps { script {
+                configure {
+                  cmakeOptions = '-DOGS_CPU_ARCHITECTURE=generic '
+                  config = 'Debug'
+                }
+              } }
             }
-          }
-          post {
-            always { publishReports { } }
+            stage("Build") {
+              steps {
+                script { build { } }
+              }
+            }
+            stage("Test") {
+              steps {
+                script { build { target = 'tests' } }
+              }
+              post { always { publishReports { } } }
+            }
           }
         }
         // ************************** envinf1 **********************************
