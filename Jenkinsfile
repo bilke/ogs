@@ -81,7 +81,7 @@ pipeline {
           stages {
             stage("Configure (GUI)") {
               steps {
-                sh 'find $HOME/.conan -name "system_reqs.txt" -exec rm {} \\;'
+                sh 'find -L $HOME/.conan -type d -name "system_reqs" -prune -exec rm -rf {} \\;'
                 script { configure {
                   cmakeOptions =
                     '-DOGS_CPU_ARCHITECTURE=generic ' +
