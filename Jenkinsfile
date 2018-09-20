@@ -285,40 +285,52 @@ pipeline {
             MSVC_NUMBER = '15'
             MSVC_VERSION = '2017'
           }
-          steps {
-            script {
-              // CLI
-              bat 'conan remove --locks'
-              configure {
-                cmakeOptions =
-                  '-DOGS_DOWNLOAD_ADDITIONAL_CONTENT=ON ' +
-                  '-DOGS_USE_PYTHON=ON '
-              }
-              build { }
-              build { target="tests" }
-              build { target="ctest" }
-              // GUI
-              configure {
-                cmakeOptions =
-                  '-DOGS_DOWNLOAD_ADDITIONAL_CONTENT=ON ' +
-                  '-DOGS_USE_PYTHON=ON ' +
-                  '-DOGS_BUILD_GUI=ON ' +
-                  '-DOGS_BUILD_UTILS=ON ' +
-                  '-DOGS_BUILD_TESTS=OFF ' +
-                  '-DOGS_BUILD_SWMM=ON '
-              }
-              build { }
+          stages {
+            stage("Configure") {
+              steps { script {
+                bat 'conan remove --locks'
+                configure {
+                  cmakeOptions =
+                    '-DOGS_DOWNLOAD_ADDITIONAL_CONTENT=ON ' +
+                    '-DOGS_USE_PYTHON=ON '
+                }
+              } }
+            }
+            stage("Build") {
+              steps { script { build { } } }
+            }
+            stage("Test") {
+              steps { script {
+                build { target="tests" }
+                build { target="ctest" }
+              } }
+              post { always { publishReports { } } }
+            }
+            stage("Configure (GUI)") {
+              steps { script {
+                configure {
+                  cmakeOptions =
+                    '-DOGS_DOWNLOAD_ADDITIONAL_CONTENT=ON ' +
+                    '-DOGS_USE_PYTHON=ON ' +
+                    '-DOGS_BUILD_GUI=ON ' +
+                    '-DOGS_BUILD_UTILS=ON ' +
+                    '-DOGS_BUILD_TESTS=OFF ' +
+                    '-DOGS_BUILD_SWMM=ON '
+                }
+              } }
+            }
+            stage("Build (GUI)") {
+              steps { script { build { } } }
+              post { always {
+                recordIssues enabledForFailure: true, filters: [
+                  excludeFile('.*\\.conan.*'), excludeFile('.*ThirdParty.*'),
+                  excludeFile('.*thread.hpp')],
+                  tools: [[name: 'MSVC', tool: [$class: 'MsBuild']]],
+                  unstableTotalAll: 6
+              } }
             }
           }
           post {
-            always {
-              publishReports { }
-              recordIssues enabledForFailure: true, filters: [
-                excludeFile('.*\\.conan.*'), excludeFile('.*ThirdParty.*'),
-                excludeFile('.*thread.hpp')],
-                tools: [[name: 'MSVC', tool: [$class: 'MsBuild']]],
-                unstableTotalAll: 6
-            }
             success {
               archiveArtifacts 'build/*.zip,build/conaninfo.txt'
             }
