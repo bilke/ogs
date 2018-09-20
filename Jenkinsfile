@@ -342,35 +342,40 @@ pipeline {
             beforeAgent true
             expression { return stage_required.build || stage_required.full }
           }
-          agent { label "mac"}
-          steps {
-            script {
-              configure {
-                cmakeOptions =
-                  '-DOGS_CPU_ARCHITECTURE=core2 ' +
-                  '-DOGS_DOWNLOAD_ADDITIONAL_CONTENT=ON ' +
-                  '-DOGS_BUILD_GUI=ON ' +
-                  '-DOGS_BUILD_UTILS=ON ' +
-                  '-DCMAKE_OSX_DEPLOYMENT_TARGET="10.13" '
-              }
-              build {
-                target = 'tests'
-                cmd_args = '-j $(( `sysctl -n hw.ncpu` - 2 ))'
-              }
-              build {
-                target = 'ctest'
-                cmd_args = '-j $(( `sysctl -n hw.ncpu` - 2 ))'
-              }
-              build {
-                target = 'package'
-                cmd_args = '-j $(( `sysctl -n hw.ncpu` - 2 ))'
-              }
+          agent { label "mac" }
+          stages {
+            stage("Configure") {
+              steps { script {
+                configure {
+                  cmakeOptions =
+                    '-DOGS_CPU_ARCHITECTURE=core2 ' +
+                    '-DOGS_DOWNLOAD_ADDITIONAL_CONTENT=ON ' +
+                    '-DOGS_BUILD_GUI=ON ' +
+                    '-DOGS_BUILD_UTILS=ON ' +
+                    '-DCMAKE_OSX_DEPLOYMENT_TARGET="10.13" '
+                }
+              } }
+            }
+            stage("Build") {
+              steps { script {
+                build { cmd_args = '-j $(( `sysctl -n hw.ncpu` - 2 ))' }
+              } }
+            }
+            stage("Test") {
+              steps { script {
+                build {
+                  target = 'tests'
+                  cmd_args = '-j $(( `sysctl -n hw.ncpu` - 2 ))'
+                }
+                build {
+                  target = 'ctest'
+                  cmd_args = '-j $(( `sysctl -n hw.ncpu` - 2 ))'
+                }
+              } }
+              post { always { publishReports { } } }
             }
           }
           post {
-            always {
-              publishReports { }
-            }
             success {
               archiveArtifacts 'build/*.tar.gz,build/*.dmg,build/conaninfo.txt'
             }
