@@ -16,7 +16,7 @@ ENV CC=gcc-4.9
 ENV CXX=g++-4.9
 
 RUN python -m pip install --upgrade pip \
-  && python -m pip install cmake conan>=1.5.1
+  && python -m pip install cmake conan>=1.7.4
 
 # Ninja
 RUN curl -L -o ninja-linux.zip https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-linux.zip \
@@ -38,4 +38,3 @@ ENV CCACHE_MAXSIZE=15G
 ENV CCACHE_SLOPPINESS=pch_defines,time_macros
 ENV CONAN_USER_HOME=/home/jenkins/cache/conan
 WORKDIR /home/jenkins
-RUN conan user
