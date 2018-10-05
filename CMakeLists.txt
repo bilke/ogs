@@ -28,7 +28,7 @@ include(ParseCMakeArgs)
 ###########################
 ### Preliminary Options ###
 ###########################
-option(BUILD_SHARED_LIBS "Create shared libraries?" OFF)
+option(BUILD_SHARED_LIBS "Create shared libraries?" ON)
 set(CMAKE_LIBRARY_SEARCH_PATH "" CACHE PATH
     "Additional library installation path, e.g. /opt/local or C:/libs")
 set(OGS_CPU_ARCHITECTURE "native" CACHE STRING "Processor architecture, \
