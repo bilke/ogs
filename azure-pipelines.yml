@@ -16,6 +16,9 @@ steps:
     script: 'mkdir build && cd build && cmake .. -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE=$(buildConfiguration)'
 - task: CmdLine@2
   inputs:
+    script: 'cmake --build build --config $(buildConfiguration) --target ProcessLib -j 1'
+- task: CmdLine@2
+  inputs:
     script: 'cmake --build build --config $(buildConfiguration) --target package'
 - task: CmdLine@2
   inputs:
