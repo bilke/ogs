@@ -5,10 +5,30 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: CMake@1
+- task: CmdLine@2
   inputs:
-    cmakeArgs: '-DCMAKE_BUILD_TYPE=$(buildConfiguration)'
-
+    script: 'pip3 install --upgrade conan'
+- task: CmdLine@2
+  inputs:
+    script: 'if exist build rd /s / build'
+- task: CmdLine@2
+  inputs:
+    script: 'mkdir build && cd build && cmake .. -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE=$(buildConfiguration)'
 - task: CmdLine@2
   inputs:
     script: 'cmake --build build --config $(buildConfiguration) --target package'
+- task: CmdLine@2
+  inputs:
+    script: 'cmake --build build --config $(buildConfiguration) --target tests'
+- task: CmdLine@2
+  inputs:
+    script: 'cmake --build build --config $(buildConfiguration) --target ctest'
+
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: 'build'
+    contents: '**\*.zip'
+    targetFolder: 'publish'
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: 'publish'
