@@ -18,9 +18,6 @@ list(APPEND CMAKE_PREFIX_PATH
 
 # Load addional modules
 include(GNUInstallDirs)
-include(ProcessorCount)
-ProcessorCount(NUM_PROCESSORS)
-set(NUM_PROCESSORS ${NUM_PROCESSORS} CACHE STRING "Processor count")
 
 # Check if this project is included in another
 if(NOT PROJECT_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
@@ -42,4 +39,15 @@ site_name(HOSTNAME)
 # Check if we are running under CI
 if(DEFINED ENV{JENKINS_URL} OR DEFINED ENV{CI})
     set(IS_CI ON CACHE INTERNAL "")
+endif()
+
+if(MSVC)
+    cmake_host_system_information(RESULT ram_mb QUERY TOTAL_PHYSICAL_MEMORY)
+    if(ram_mb LESS 16000)
+        message(STATUS "Insufficient RAM (${ram_mb} MB)! Setting "
+            "OGS_EIGEN_DYNAMIC_SHAPE_MATRICES=ON.\n   "
+            "If you get out-of-heap space errors see\n   "
+            "https://www.opengeosys.org/docs/devguide/troubleshooting/build/")
+        set(OGS_EIGEN_DYNAMIC_SHAPE_MATRICES ON)
+    endif()
 endif()

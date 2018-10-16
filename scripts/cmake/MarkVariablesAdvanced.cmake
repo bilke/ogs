@@ -33,7 +33,6 @@ mark_as_advanced(
     MODULE_CMD
     MPIRUN_TOOL_PATH
     NPM
-    NUM_PROCESSORS
     ParaView_DIR
     PIP
     ProcessorCount_cmd_sysctl
