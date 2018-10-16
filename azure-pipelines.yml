@@ -2,7 +2,7 @@ pool:
   vmImage: 'VS2017-Win2016'
 
 variables:
-  buildConfiguration: 'Release'
+  buildConfiguration: 'Debug'
 
 steps:
 - task: CmdLine@2
@@ -14,9 +14,6 @@ steps:
 - task: CmdLine@2
   inputs:
     script: 'mkdir build && cd build && cmake .. -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE=$(buildConfiguration)'
-- task: CmdLine@2
-  inputs:
-    script: 'cmake --build build --config $(buildConfiguration) --target ProcessLib -j 1'
 - task: CmdLine@2
   inputs:
     script: 'cmake --build build --config $(buildConfiguration) --target package'
