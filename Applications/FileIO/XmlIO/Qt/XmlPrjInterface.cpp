@@ -18,12 +18,13 @@
 #include <QtXml/QDomDocument>
 #include <logog/include/logog.hpp>
 
+#include "Applications/DataExplorer/Base/OGSError.h"
+#include "Applications/DataHolderLib/FemCondition.h"
+
 #include "BaseLib/BuildInfo.h"
 #include "BaseLib/FileFinder.h"
 #include "BaseLib/FileTools.h"
 #include "BaseLib/IO/Writer.h"
-
-#include "Applications/DataHolderLib/FemCondition.h"
 
 #include "GeoLib/GEOObjects.h"
 
@@ -38,11 +39,7 @@ namespace FileIO
 {
 XmlPrjInterface::XmlPrjInterface(DataHolderLib::Project& project)
     : XMLInterface(),
-      XMLQtInterface(
-          BaseLib::FileFinder({BaseLib::BuildInfo::app_xml_schema_path})
-              .getPath("OpenGeoSysProject.xsd")),
-      _filename(""),
-      _project(project)
+      XMLQtInterface("OpenGeoSysProject.xsd"), _filename(""), _project(project)
 {
 }
 
@@ -66,6 +63,15 @@ int XmlPrjInterface::readFile(const QString& fileName)
         return 0;
     }
 
+    auto read_single_mesh = [&](QString const& mesh_str) {
+        std::unique_ptr<MeshLib::Mesh> mesh{
+            MeshLib::IO::readMeshFromFile(mesh_str.toStdString())};
+        if (mesh != nullptr)
+        {
+            _project.addMesh(std::move(mesh));
+        }
+    };
+
     QDomNodeList fileList = docElement.childNodes();
 
     for (int i = 0; i < fileList.count(); i++)
@@ -79,7 +85,15 @@ int XmlPrjInterface::readFile(const QString& fileName)
         if (node_name == "geometry")
         {
             GeoLib::IO::XmlGmlInterface gml(_project.getGEOObjects());
-            gml.readFile(QString(path + file_name));
+            try
+            {
+                gml.readFile(QString(path + file_name));
+            }
+            catch (std::runtime_error const& err)
+            {
+                OGSError::box(err.what(),
+                              "Failed to read file `" + fileName + "'");
+            }
         }
         else if (node_name == "stations")
         {
@@ -88,11 +102,41 @@ int XmlPrjInterface::readFile(const QString& fileName)
         }
         else if (node_name == "mesh")
         {
-            QString const mesh_str(path + file_name);
-            std::unique_ptr<MeshLib::Mesh> mesh(
-                MeshLib::IO::readMeshFromFile(mesh_str.toStdString()));
-            if (mesh)
-                _project.addMesh(std::move(mesh));
+            read_single_mesh(path + file_name);
+        }
+        else if (node_name == "meshes")
+        {
+            for (QDomNode meshes_node = node.firstChild();
+                 meshes_node != QDomNode();
+                 meshes_node = meshes_node.nextSibling())
+            {
+                if (!meshes_node.isElement())
+                {
+                    ERR("Expected an XML element node.")
+                    return 0;
+                }
+                if (meshes_node.nodeName() != "mesh")
+                {
+                    ERR("Expected an XML element node named 'mesh' got '%s'.",
+                        meshes_node.nodeName().data())
+                    return 0;
+                }
+                if (meshes_node.childNodes().count() != 1)
+                {
+                    ERR("Expected an XML element node named 'mesh' to contain "
+                        "exactly one child node but it has %d children.",
+                        meshes_node.childNodes().count());
+                    return 0;
+                }
+                QDomNode node_text = meshes_node.firstChild();
+                if (!node_text.isText())
+                {
+                    ERR("Expected an XML element node named 'mesh' to contain "
+                        "text.")
+                    return 0;
+                }
+                read_single_mesh(path + node_text.toText().data().trimmed());
+            }
         }
 
         else if (node_name == "parameters")
@@ -269,9 +313,6 @@ bool XmlPrjInterface::write()
     QDomElement root = doc.createElement("OpenGeoSysProject");
     root.setAttribute("xmlns:ogs", "http://www.opengeosys.org");
     root.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-    root.setAttribute(
-        "xsi:noNamespaceSchemaLocation",
-        "http://www.opengeosys.org/images/xsd/OpenGeoSysProject.xsd");
 
     doc.appendChild(root);
 

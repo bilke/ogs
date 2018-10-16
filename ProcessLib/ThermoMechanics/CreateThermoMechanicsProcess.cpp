@@ -11,10 +11,10 @@
 
 #include <cassert>
 
-#include "MaterialLib/SolidModels/CreateEhlers.h"
-#include "MaterialLib/SolidModels/CreateLinearElasticIsotropic.h"
-#include "MaterialLib/SolidModels/CreateLubby2.h"
+#include "MaterialLib/SolidModels/MechanicsBase.h"
+#include "MaterialLib/SolidModels/CreateConstitutiveRelation.h"
 #include "ProcessLib/Output/CreateSecondaryVariables.h"
+#include "ProcessLib/Utils/ProcessUtils.h"
 
 #include "ThermoMechanicsProcess.h"
 #include "ThermoMechanicsProcessData.h"
@@ -100,40 +100,9 @@ std::unique_ptr<Process> createThermoMechanicsProcess(
             variable_T->getNumberOfComponents());
     }
 
-    // Constitutive relation.
-    // read type;
-    auto const constitutive_relation_config =
-        //! \ogs_file_param{prj__processes__process__THERMO_MECHANICS__constitutive_relation}
-        config.getConfigSubtree("constitutive_relation");
-
-    auto const type =
-        //! \ogs_file_param{prj__processes__process__THERMO_MECHANICS__constitutive_relation__type}
-        constitutive_relation_config.peekConfigParameter<std::string>("type");
-
-    std::unique_ptr<MaterialLib::Solids::MechanicsBase<DisplacementDim>>
-        material = nullptr;
-    if (type == "Ehlers")
-    {
-        material = MaterialLib::Solids::Ehlers::createEhlers<DisplacementDim>(
-            parameters, constitutive_relation_config);
-    }
-    else if (type == "LinearElasticIsotropic")
-    {
-        material =
-            MaterialLib::Solids::createLinearElasticIsotropic<DisplacementDim>(
-                parameters, constitutive_relation_config);
-    }
-    else if (type == "Lubby2")
-    {
-        material = MaterialLib::Solids::Lubby2::createLubby2<DisplacementDim>(
-            parameters, constitutive_relation_config);
-    }
-    else
-    {
-        OGS_FATAL(
-            "Cannot construct constitutive relation of given type \'%s\'.",
-            type.c_str());
-    }
+    auto solid_constitutive_relations =
+        MaterialLib::Solids::createConstitutiveRelations<DisplacementDim>(
+            parameters, config);
 
     // Reference solid density
     auto& reference_solid_density = findParameter<double>(
@@ -164,10 +133,6 @@ std::unique_ptr<Process> createThermoMechanicsProcess(
         "thermal_conductivity", parameters, 1);
     DBUG("Use \'%s\' as thermal conductivity parameter.",
          thermal_conductivity.name.c_str());
-    // Reference temperature
-    const double reference_temperature =
-        //! \ogs_file_param{prj__processes__process__THERMO_MECHANICS__reference_temperature}
-        config.getConfigParameter<double>("reference_temperature");
 
     // Specific body force
     Eigen::Matrix<double, DisplacementDim, 1> specific_body_force;
@@ -187,12 +152,9 @@ std::unique_ptr<Process> createThermoMechanicsProcess(
     }
 
     ThermoMechanicsProcessData<DisplacementDim> process_data{
-        std::move(material),
-        reference_solid_density,
-        linear_thermal_expansion_coefficient,
-        specific_heat_capacity,
-        thermal_conductivity,
-        reference_temperature,
+        materialIDs(mesh),       std::move(solid_constitutive_relations),
+        reference_solid_density, linear_thermal_expansion_coefficient,
+        specific_heat_capacity,  thermal_conductivity,
         specific_body_force};
 
     SecondaryVariableCollection secondary_variables;

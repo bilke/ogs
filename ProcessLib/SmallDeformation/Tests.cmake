@@ -22,7 +22,7 @@ AddTest(
     square_1e2_expected_pcs_0_ts_4_t_1.000000.vtu square_1e2_pcs_0_ts_4_t_1.000000.vtu sigma sigma 1e-15 0
 )
 AddTest(
-    NAME LARGE_Mechanics_SDL_disc_with_hole
+    NAME Mechanics_SDL_disc_with_hole
     PATH Mechanics/Linear
     EXECUTABLE ogs
     EXECUTABLE_ARGS disc_with_hole.prj
@@ -40,8 +40,8 @@ AddTest(
     TESTER vtkdiff
     REQUIREMENTS NOT OGS_USE_MPI
     DIFF_DATA
-    square_1e5_expected_pcs_0_ts_4_t_1.000000.vtu square_1e5_pcs_0_ts_4_t_1.000000.vtu displacement displacement 1e-16 1e-16
-    square_1e5_expected_pcs_0_ts_4_t_1.000000.vtu square_1e5_pcs_0_ts_4_t_1.000000.vtu sigma sigma 1e-16 1e-16
+    square_1e5_expected_pcs_0_ts_4_t_1.000000.vtu square_1e5_pcs_0_ts_4_t_1.000000.vtu displacement displacement 1e-15 0
+    square_1e5_expected_pcs_0_ts_4_t_1.000000.vtu square_1e5_pcs_0_ts_4_t_1.000000.vtu sigma sigma 1e-13 0
 )
 AddTest(
     NAME Mechanics_SDL_square_1e2_quad8_traction_topBC
@@ -287,9 +287,9 @@ AddTest(
     ref_axisymmetric_sphere_pcs_0_ts_100_t_1.000000.vtu axisymmetric_sphere_pcs_0_ts_100_t_1.000000.vtu sigma sigma 1e-15 0
 )
 
-# Two materials in gravity field
+# Two materials in gravity field variation of density
 AddTest(
-    NAME SmallDeformation_SDL_two_material_gravity
+    NAME SmallDeformation_SDL_two_material_gravity_density
     PATH Mechanics/Linear
     EXECUTABLE_ARGS two_material_gravity.prj
     TESTER vtkdiff
@@ -298,4 +298,50 @@ AddTest(
     expected_two_material_gravity.vtu two_material_gravity_pcs_0_ts_1_t_1.000000.vtu displacement displacement 5e-14 0
     expected_two_material_gravity.vtu two_material_gravity_pcs_0_ts_1_t_1.000000.vtu sigma sigma 5e-14 0
     expected_two_material_gravity.vtu two_material_gravity_pcs_0_ts_1_t_1.000000.vtu epsilon epsilon 5e-14 0
+)
+
+# Two materials in gravity field variation of modulus of elasticity
+AddTest(
+    NAME SmallDeformation_SDL_two_material_gravity_Emodulus
+    PATH Mechanics/Linear
+    EXECUTABLE_ARGS two_material_gravity_Emodulus.prj
+    TESTER vtkdiff
+    REQUIREMENTS NOT OGS_USE_MPI
+    DIFF_DATA
+    expected_two_material_gravity_Emodulus.vtu two_material_gravity_Emodulus_pcs_0_ts_1_t_1.000000.vtu displacement displacement 5e-14 0
+    expected_two_material_gravity_Emodulus.vtu two_material_gravity_Emodulus_pcs_0_ts_1_t_1.000000.vtu sigma sigma 1e-13 0
+    expected_two_material_gravity_Emodulus.vtu two_material_gravity_Emodulus_pcs_0_ts_1_t_1.000000.vtu epsilon epsilon 5e-14 0
+)
+AddTest(
+    NAME PythonBCSmallDeformationPiston
+    PATH Mechanics/Linear/PythonPiston
+    EXECUTABLE ogs
+    EXECUTABLE_ARGS piston.prj
+    WRAPPER time
+    TESTER vtkdiff
+    REQUIREMENTS OGS_USE_PYTHON AND NOT OGS_USE_MPI
+    DIFF_DATA
+    ref_piston_pcs_0_ts_5_t_5.000000.vtu   piston_pcs_0_ts_5_t_5.000000.vtu  displacement displacement 1e-16 0
+    ref_piston_pcs_0_ts_5_t_5.000000.vtu   piston_pcs_0_ts_5_t_5.000000.vtu  epsilon epsilon 1e-14 0
+    ref_piston_pcs_0_ts_5_t_5.000000.vtu   piston_pcs_0_ts_5_t_5.000000.vtu  sigma sigma 1e-8 0
+    ref_piston_pcs_0_ts_10_t_10.000000.vtu piston_pcs_0_ts_10_t_10.000000.vtu displacement displacement 1e-16 0
+    ref_piston_pcs_0_ts_10_t_10.000000.vtu piston_pcs_0_ts_10_t_10.000000.vtu epsilon epsilon 1e-13 0
+    ref_piston_pcs_0_ts_10_t_10.000000.vtu piston_pcs_0_ts_10_t_10.000000.vtu sigma sigma 1e-7 0
+)
+
+AddTest(
+    NAME LARGE_PythonBCSmallDeformationHertzContact
+    PATH Mechanics/Linear/PythonHertzContact
+    EXECUTABLE ogs
+    EXECUTABLE_ARGS hertz_contact.prj
+    WRAPPER time
+    TESTER vtkdiff
+    REQUIREMENTS OGS_USE_PYTHON AND NOT OGS_USE_MPI
+    DIFF_DATA
+    ref_hertz_contact_ts_5.vtu  hertz_pcs_0_ts_5_t_5.000000.vtu  displacement displacement 1e-16 0
+    ref_hertz_contact_ts_5.vtu  hertz_pcs_0_ts_5_t_5.000000.vtu  epsilon epsilon 1e-16 0
+    ref_hertz_contact_ts_5.vtu  hertz_pcs_0_ts_5_t_5.000000.vtu  sigma sigma 1e-16 0
+    ref_hertz_contact_ts_10.vtu hertz_pcs_0_ts_10_t_10.000000.vtu displacement displacement 1e-16 0
+    ref_hertz_contact_ts_10.vtu hertz_pcs_0_ts_10_t_10.000000.vtu epsilon epsilon 1e-16 0
+    ref_hertz_contact_ts_10.vtu hertz_pcs_0_ts_10_t_10.000000.vtu sigma sigma 1e-16 0
 )

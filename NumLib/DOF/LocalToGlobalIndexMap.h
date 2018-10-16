@@ -18,9 +18,14 @@
 #include <Eigen/Dense>
 
 #include "MathLib/LinAlg/RowColumnIndices.h"
-#include "MeshLib/MeshSubsets.h"
 
 #include "MeshComponentMap.h"
+
+namespace MeshLib
+{
+class Node;
+class Element;
+}  // namespace MeshLib
 
 namespace NumLib
 {
@@ -36,6 +41,14 @@ namespace NumLib
 /// mesh item.
 class LocalToGlobalIndexMap final
 {
+    // Enables using std::make_unique with private constructors from within
+    // member functions of LocalToGlobalIndexMap. Cf.
+    // http://seanmiddleditch.com/enabling-make_unique-with-private-constructors/
+    struct ConstructorTag
+    {
+        explicit ConstructorTag() = default;
+    };
+
 public:
     using RowColumnIndices = MathLib::RowColumnIndices<GlobalIndexType>;
     using LineIndex = RowColumnIndices::LineIndex;
@@ -46,9 +59,8 @@ public:
     ///
     /// \attention This constructor assumes the number of the given mesh subsets
     /// is equal to the number of variables, i.e. every variable has a single component.
-    LocalToGlobalIndexMap(
-        std::vector<MeshLib::MeshSubsets>&& mesh_subsets,
-        NumLib::ComponentOrder const order);
+    LocalToGlobalIndexMap(std::vector<MeshLib::MeshSubset>&& mesh_subsets,
+                          NumLib::ComponentOrder const order);
 
     /// Creates a MeshComponentMap internally and stores the global indices for
     /// each mesh element of the given mesh_subsets.
@@ -58,7 +70,7 @@ public:
     /// The size of the vector should be equal to the number of variables. Sum of the entries
     /// should be equal to the size of the mesh_subsets.
     /// \param order  type of ordering values in a vector
-    LocalToGlobalIndexMap(std::vector<MeshLib::MeshSubsets>&& mesh_subsets,
+    LocalToGlobalIndexMap(std::vector<MeshLib::MeshSubset>&& mesh_subsets,
                           std::vector<int> const& vec_var_n_components,
                           NumLib::ComponentOrder const order);
 
@@ -72,22 +84,26 @@ public:
     /// \param vec_var_elements  a vector of active mesh elements for each variable.
     /// \param order  type of ordering values in a vector
     LocalToGlobalIndexMap(
-        std::vector<MeshLib::MeshSubsets>&& mesh_subsets,
+        std::vector<MeshLib::MeshSubset>&& mesh_subsets,
         std::vector<int> const& vec_var_n_components,
         std::vector<std::vector<MeshLib::Element*> const*> const&
             vec_var_elements,
         NumLib::ComponentOrder const order);
 
-    /// Derive a LocalToGlobalIndexMap constrained to a set of mesh subsets and
-    /// elements. A new mesh component map will be constructed using the passed
-    /// mesh_subsets for the given variable and component ids.
-    ///
-    /// \note The elements are not necessarily those used in the mesh_subsets.
+    /// Derive a LocalToGlobalIndexMap constrained to the mesh subset and mesh
+    /// subset's elements. A new mesh component map will be constructed using
+    /// the passed mesh_subset for the given variable and component ids.
     LocalToGlobalIndexMap* deriveBoundaryConstrainedMap(
         int const variable_id,
         std::vector<int> const& component_ids,
-        MeshLib::MeshSubsets&& mesh_subsets,
-        std::vector<MeshLib::Element*> const& elements) const;
+        MeshLib::MeshSubset&& new_mesh_subset) const;
+
+    /// Derive a LocalToGlobalIndexMap constrained to the mesh subset and mesh
+    /// subset's elements. A new mesh component map will be constructed using
+    /// the passed mesh_subset for all variables and components of the current
+    /// LocalToGlobalIndexMap.
+    std::unique_ptr<LocalToGlobalIndexMap> deriveBoundaryConstrainedMap(
+        MeshLib::MeshSubset&& new_mesh_subset) const;
 
     /// Returns total number of degrees of freedom including those located in
     /// the ghost nodes.
@@ -137,24 +153,30 @@ public:
                                   std::size_t const range_begin,
                                   std::size_t const range_end) const;
 
-    MeshLib::MeshSubsets const& getMeshSubsets(int const variable_id,
-                                               int const component_id) const;
+    MeshLib::MeshSubset const& getMeshSubset(int const variable_id,
+                                             int const component_id) const;
 
-    MeshLib::MeshSubsets const& getMeshSubsets(
+    MeshLib::MeshSubset const& getMeshSubset(
         int const global_component_id) const;
 
-private:
-    /// Private constructor used by internally created local-to-global index
-    /// maps. The mesh_component_map is passed as argument instead of being
-    /// created by the constructor.
+    /// The global component id for the specific variable (like velocity) and a
+    /// component (like x, or y, or z).
+    int getGlobalComponent(int const variable_id, int const component_id) const;
+
+    /// Private constructor (ensured by ConstructorTag) used by internally
+    /// created local-to-global index maps. The mesh_component_map is passed as
+    /// argument instead of being created by the constructor.
+    ///
     /// \attention The passed mesh_component_map is in undefined state after
     /// this construtor.
     explicit LocalToGlobalIndexMap(
-        std::vector<MeshLib::MeshSubsets>&& mesh_subsets,
+        std::vector<MeshLib::MeshSubset>&& mesh_subsets,
         std::vector<int> const& global_component_ids,
+        std::vector<int> const& variable_component_offsets,
         std::vector<MeshLib::Element*> const& elements,
-        NumLib::MeshComponentMap&& mesh_component_map);
+        NumLib::MeshComponentMap&& mesh_component_map, ConstructorTag);
 
+private:
     template <typename ElementIterator>
     void findGlobalIndices(ElementIterator first, ElementIterator last,
                            std::vector<MeshLib::Node*> const& nodes,
@@ -167,13 +189,8 @@ private:
         std::vector<MeshLib::Node*> const& nodes, std::size_t const mesh_id,
         const int component_id, const int comp_id_write);
 
-    /// The global component id for the specific variable (like velocity) and a
-    /// component (like x, or y, or z).
-    int getGlobalComponent(int const variable_id, int const component_id) const;
-
-private:
     /// A vector of mesh subsets for each process variables' components.
-    std::vector<MeshLib::MeshSubsets> const _mesh_subsets;
+    std::vector<MeshLib::MeshSubset> _mesh_subsets;
     NumLib::MeshComponentMap _mesh_component_map;
 
     using Table = Eigen::Matrix<LineIndex, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;

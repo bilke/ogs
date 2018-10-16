@@ -79,17 +79,16 @@ void HydroMechanicsProcess<DisplacementDim>::constructDofTable()
 {
     // Create single component dof in every of the mesh's nodes.
     _mesh_subset_all_nodes =
-        std::make_unique<MeshLib::MeshSubset>(_mesh, &_mesh.getNodes());
+        std::make_unique<MeshLib::MeshSubset>(_mesh, _mesh.getNodes());
     // Create single component dof in the mesh's base nodes.
     _base_nodes = MeshLib::getBaseNodes(_mesh.getElements());
     _mesh_subset_base_nodes =
-        std::make_unique<MeshLib::MeshSubset>(_mesh, &_base_nodes);
+        std::make_unique<MeshLib::MeshSubset>(_mesh, _base_nodes);
 
     // TODO move the two data members somewhere else.
     // for extrapolation of secondary variables of stress or strain
-    std::vector<MeshLib::MeshSubsets> all_mesh_subsets_single_component;
-    all_mesh_subsets_single_component.emplace_back(
-        _mesh_subset_all_nodes.get());
+    std::vector<MeshLib::MeshSubset> all_mesh_subsets_single_component{
+        *_mesh_subset_all_nodes};
     _local_to_global_index_map_single_component =
         std::make_unique<NumLib::LocalToGlobalIndexMap>(
             std::move(all_mesh_subsets_single_component),
@@ -99,19 +98,16 @@ void HydroMechanicsProcess<DisplacementDim>::constructDofTable()
     if (_use_monolithic_scheme)
     {
         // For pressure, which is the first
-        std::vector<MeshLib::MeshSubsets> all_mesh_subsets;
-        all_mesh_subsets.emplace_back(_mesh_subset_base_nodes.get());
+        std::vector<MeshLib::MeshSubset> all_mesh_subsets{
+            *_mesh_subset_base_nodes};
 
         // For displacement.
         const int monolithic_process_id = 0;
-        std::generate_n(
-            std::back_inserter(all_mesh_subsets),
-            getProcessVariables(monolithic_process_id)[1]
-                .get()
-                .getNumberOfComponents(),
-            [&]() {
-                return MeshLib::MeshSubsets{_mesh_subset_all_nodes.get()};
-            });
+        std::generate_n(std::back_inserter(all_mesh_subsets),
+                        getProcessVariables(monolithic_process_id)[1]
+                            .get()
+                            .getNumberOfComponents(),
+                        [&]() { return *_mesh_subset_all_nodes; });
 
         std::vector<int> const vec_n_components{1, DisplacementDim};
         _local_to_global_index_map =
@@ -124,13 +120,11 @@ void HydroMechanicsProcess<DisplacementDim>::constructDofTable()
     {
         // For displacement equation.
         const int process_id = 1;
-        std::vector<MeshLib::MeshSubsets> all_mesh_subsets;
+        std::vector<MeshLib::MeshSubset> all_mesh_subsets;
         std::generate_n(
             std::back_inserter(all_mesh_subsets),
             getProcessVariables(process_id)[0].get().getNumberOfComponents(),
-            [&]() {
-                return MeshLib::MeshSubsets{_mesh_subset_all_nodes.get()};
-            });
+            [&]() { return *_mesh_subset_all_nodes; });
 
         std::vector<int> const vec_n_components{DisplacementDim};
         _local_to_global_index_map =
@@ -140,8 +134,8 @@ void HydroMechanicsProcess<DisplacementDim>::constructDofTable()
 
         // For pressure equation.
         // Collect the mesh subsets with base nodes in a vector.
-        std::vector<MeshLib::MeshSubsets> all_mesh_subsets_base_nodes;
-        all_mesh_subsets_base_nodes.emplace_back(_mesh_subset_base_nodes.get());
+        std::vector<MeshLib::MeshSubset> all_mesh_subsets_base_nodes{
+            *_mesh_subset_base_nodes};
         _local_to_global_index_map_with_base_nodes =
             std::make_unique<NumLib::LocalToGlobalIndexMap>(
                 std::move(all_mesh_subsets_base_nodes),
@@ -174,64 +168,69 @@ void HydroMechanicsProcess<DisplacementDim>::initializeConcreteProcess(
         _local_assemblers, mesh.isAxiallySymmetric(), integration_order,
         _process_data);
 
-    Base::_secondary_variables.addSecondaryVariable(
+    _secondary_variables.addSecondaryVariable(
         "sigma_xx",
         makeExtrapolator(1, getExtrapolator(), _local_assemblers,
                          &LocalAssemblerInterface::getIntPtSigmaXX));
 
-    Base::_secondary_variables.addSecondaryVariable(
+    _secondary_variables.addSecondaryVariable(
         "sigma_yy",
         makeExtrapolator(1, getExtrapolator(), _local_assemblers,
                          &LocalAssemblerInterface::getIntPtSigmaYY));
 
-    Base::_secondary_variables.addSecondaryVariable(
+    _secondary_variables.addSecondaryVariable(
         "sigma_zz",
         makeExtrapolator(1, getExtrapolator(), _local_assemblers,
                          &LocalAssemblerInterface::getIntPtSigmaZZ));
 
-    Base::_secondary_variables.addSecondaryVariable(
+    _secondary_variables.addSecondaryVariable(
         "sigma_xy",
         makeExtrapolator(1, getExtrapolator(), _local_assemblers,
                          &LocalAssemblerInterface::getIntPtSigmaXY));
 
     if (DisplacementDim == 3)
     {
-        Base::_secondary_variables.addSecondaryVariable(
+        _secondary_variables.addSecondaryVariable(
             "sigma_xz",
             makeExtrapolator(1, getExtrapolator(), _local_assemblers,
                              &LocalAssemblerInterface::getIntPtSigmaXZ));
 
-        Base::_secondary_variables.addSecondaryVariable(
+        _secondary_variables.addSecondaryVariable(
             "sigma_yz",
             makeExtrapolator(1, getExtrapolator(), _local_assemblers,
                              &LocalAssemblerInterface::getIntPtSigmaYZ));
     }
 
-    Base::_secondary_variables.addSecondaryVariable(
+    _secondary_variables.addSecondaryVariable(
         "epsilon_xx",
         makeExtrapolator(1, getExtrapolator(), _local_assemblers,
                          &LocalAssemblerInterface::getIntPtEpsilonXX));
 
-    Base::_secondary_variables.addSecondaryVariable(
+    _secondary_variables.addSecondaryVariable(
         "epsilon_yy",
         makeExtrapolator(1, getExtrapolator(), _local_assemblers,
                          &LocalAssemblerInterface::getIntPtEpsilonYY));
 
-    Base::_secondary_variables.addSecondaryVariable(
+    _secondary_variables.addSecondaryVariable(
         "epsilon_zz",
         makeExtrapolator(1, getExtrapolator(), _local_assemblers,
                          &LocalAssemblerInterface::getIntPtEpsilonZZ));
 
-    Base::_secondary_variables.addSecondaryVariable(
+    _secondary_variables.addSecondaryVariable(
         "epsilon_xy",
         makeExtrapolator(1, getExtrapolator(), _local_assemblers,
                          &LocalAssemblerInterface::getIntPtEpsilonXY));
 
-    Base::_secondary_variables.addSecondaryVariable(
+    _secondary_variables.addSecondaryVariable(
         "velocity",
         makeExtrapolator(mesh.getDimension(), getExtrapolator(),
                          _local_assemblers,
                          &LocalAssemblerInterface::getIntPtDarcyVelocity));
+
+    _process_data.pressure_interpolated =
+        MeshLib::getOrCreateMeshProperty<double>(
+            const_cast<MeshLib::Mesh&>(mesh), "pressure_interpolated",
+            MeshLib::MeshItemType::Node, 1);
 }
 
 template <int DisplacementDim>
@@ -384,6 +383,16 @@ void HydroMechanicsProcess<DisplacementDim>::postNonLinearSolverConcreteProcess(
     GlobalExecutor::executeMemberOnDereferenced(
         &LocalAssemblerInterface::postNonLinearSolver, _local_assemblers,
         getDOFTable(process_id), x, t, _use_monolithic_scheme);
+}
+
+template <int DisplacementDim>
+void HydroMechanicsProcess<DisplacementDim>::computeSecondaryVariableConcrete(
+    const double t, GlobalVector const& x)
+{
+    DBUG("Compute the secondary variables for HydroMechanicsProcess.");
+    GlobalExecutor::executeMemberOnDereferenced(
+        &LocalAssemblerInterface::computeSecondaryVariable, _local_assemblers,
+        *_local_to_global_index_map, t, x, _coupled_solutions);
 }
 
 template <int DisplacementDim>

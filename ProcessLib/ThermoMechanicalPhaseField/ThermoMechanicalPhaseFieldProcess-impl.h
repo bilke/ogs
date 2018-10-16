@@ -107,13 +107,12 @@ void ThermoMechanicalPhaseFieldProcess<DisplacementDim>::constructDofTable()
 {
     // Create single component dof in every of the mesh's nodes.
     _mesh_subset_all_nodes =
-        std::make_unique<MeshLib::MeshSubset>(_mesh, &_mesh.getNodes());
+        std::make_unique<MeshLib::MeshSubset>(_mesh, _mesh.getNodes());
 
     // TODO move the two data members somewhere else.
     // for extrapolation of secondary variables of stress or strain
-    std::vector<MeshLib::MeshSubsets> all_mesh_subsets_single_component;
-    all_mesh_subsets_single_component.emplace_back(
-        _mesh_subset_all_nodes.get());
+    std::vector<MeshLib::MeshSubset> all_mesh_subsets_single_component{
+        *_mesh_subset_all_nodes};
     _local_to_global_index_map_single_component =
         std::make_unique<NumLib::LocalToGlobalIndexMap>(
             std::move(all_mesh_subsets_single_component),
@@ -123,13 +122,12 @@ void ThermoMechanicalPhaseFieldProcess<DisplacementDim>::constructDofTable()
     assert(_local_to_global_index_map_single_component);
 
     // For displacement equation.
-    std::vector<MeshLib::MeshSubsets> all_mesh_subsets;
-    std::generate_n(
-        std::back_inserter(all_mesh_subsets),
-        getProcessVariables(_mechanics_related_process_id)[0]
-            .get()
-            .getNumberOfComponents(),
-        [&]() { return MeshLib::MeshSubsets{_mesh_subset_all_nodes.get()}; });
+    std::vector<MeshLib::MeshSubset> all_mesh_subsets;
+    std::generate_n(std::back_inserter(all_mesh_subsets),
+                    getProcessVariables(_mechanics_related_process_id)[0]
+                        .get()
+                        .getNumberOfComponents(),
+                    [&]() { return *_mesh_subset_all_nodes; });
 
     std::vector<int> const vec_n_components{DisplacementDim};
     _local_to_global_index_map =
@@ -155,7 +153,7 @@ void ThermoMechanicalPhaseFieldProcess<DisplacementDim>::
         _mechanics_related_process_id, _phase_field_process_id,
         _heat_conduction_process_id);
 
-    Base::_secondary_variables.addSecondaryVariable(
+    _secondary_variables.addSecondaryVariable(
         "sigma",
         makeExtrapolator(
             MathLib::KelvinVector::KelvinVectorType<
@@ -163,7 +161,7 @@ void ThermoMechanicalPhaseFieldProcess<DisplacementDim>::
             getExtrapolator(), _local_assemblers,
             &ThermoMechanicalPhaseFieldLocalAssemblerInterface::getIntPtSigma));
 
-    Base::_secondary_variables.addSecondaryVariable(
+    _secondary_variables.addSecondaryVariable(
         "epsilon",
         makeExtrapolator(MathLib::KelvinVector::KelvinVectorType<
                              DisplacementDim>::RowsAtCompileTime,
@@ -171,7 +169,7 @@ void ThermoMechanicalPhaseFieldProcess<DisplacementDim>::
                          &ThermoMechanicalPhaseFieldLocalAssemblerInterface::
                              getIntPtEpsilon));
 
-    Base::_secondary_variables.addSecondaryVariable(
+    _secondary_variables.addSecondaryVariable(
         "heat_flux",
         makeExtrapolator(mesh.getDimension(), getExtrapolator(),
                          _local_assemblers,

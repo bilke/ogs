@@ -9,16 +9,20 @@
 
 #include "CreateNodalSourceTerm.h"
 
-#include "BaseLib/FileTools.h"
+#include <logog/include/logog.hpp>
+
+#include "BaseLib/ConfigTree.h"
 #include "ProcessLib/Utils/ProcessUtils.h"
+
 #include "NodalSourceTerm.h"
 
 namespace ProcessLib
 {
-std::unique_ptr<NodalSourceTerm> createNodalSourceTerm(
-    BaseLib::ConfigTree const& config,
-    const NumLib::LocalToGlobalIndexMap& dof_table, std::size_t const mesh_id,
-    std::size_t const node_id, const int variable_id, const int component_id,
+std::unique_ptr<SourceTerm> createNodalSourceTerm(
+    BaseLib::ConfigTree const& config, MeshLib::Mesh const& st_mesh,
+    const NumLib::LocalToGlobalIndexMap& dof_table,
+    std::size_t const bulk_mesh_id, const int variable_id,
+    const int component_id,
     std::vector<std::unique_ptr<ProcessLib::ParameterBase>> const& parameters)
 {
     DBUG("Constructing NodalSourceTerm from config.");
@@ -31,8 +35,8 @@ std::unique_ptr<NodalSourceTerm> createNodalSourceTerm(
 
     auto& param = findParameter<double>(param_name, parameters, 1);
 
-    return std::make_unique<NodalSourceTerm>(
-        dof_table, mesh_id, node_id, variable_id, component_id, param);
+    return std::make_unique<NodalSourceTerm>(dof_table, bulk_mesh_id, st_mesh,
+                                             variable_id, component_id, param);
 }
 
 }  // namespace ProcessLib

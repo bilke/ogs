@@ -16,6 +16,8 @@
 
 #include <Eigen/Eigen>
 
+#include "MaterialLib/PhysicalConstant.h"
+
 #include "MathLib/KelvinVector.h"
 #include "MathLib/LinAlg/Eigen/EigenMapTools.h"
 #include "MathLib/Point3d.h"
@@ -79,9 +81,12 @@ SmallDeformationLocalAssemblerMatrixNearFracture<ShapeFunction,
     _ip_data.reserve(n_integration_points);
     _secondary_data.N.resize(n_integration_points);
 
+    auto& solid_material = MaterialLib::Solids::selectSolidConstitutiveRelation(
+        _process_data.solid_materials, _process_data.material_ids, e.getID());
+
     for (unsigned ip = 0; ip < n_integration_points; ip++)
     {
-        _ip_data.emplace_back(*_process_data._material);
+        _ip_data.emplace_back(solid_material);
         auto& ip_data = _ip_data[ip];
         auto const& sm = shape_matrices[ip];
         ip_data.N = sm.N;
@@ -241,7 +246,8 @@ void SmallDeformationLocalAssemblerMatrixNearFracture<
         eps.noalias() = B * nodal_total_u;
 
         auto&& solution = _ip_data[ip]._solid_material.integrateStress(
-            t, x_position, _process_data.dt, eps_prev, eps, sigma_prev, *state);
+            t, x_position, _process_data.dt, eps_prev, eps, sigma_prev, *state,
+            _process_data._reference_temperature);
 
         if (!solution)
         {
@@ -289,7 +295,8 @@ template <typename ShapeFunction,
 void SmallDeformationLocalAssemblerMatrixNearFracture<ShapeFunction,
                                                       IntegrationMethod,
                                                       DisplacementDim>::
-    postTimestepConcrete(std::vector<double> const& /*local_x*/)
+    computeSecondaryVariableConcreteWithVector(
+        double const /*t*/, Eigen::VectorXd const& /*local_x*/)
 {
     // Compute average value per element
     const int n = DisplacementDim == 2 ? 4 : 6;

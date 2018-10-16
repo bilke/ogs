@@ -13,25 +13,27 @@ endforeach()
 
 APPEND_SOURCE_FILES(SOURCES)
 APPEND_SOURCE_FILES(SOURCES BoundaryCondition)
-APPEND_SOURCE_FILES(SOURCES CalculateSurfaceFlux)
+APPEND_SOURCE_FILES(SOURCES SurfaceFlux)
 APPEND_SOURCE_FILES(SOURCES Output)
 APPEND_SOURCE_FILES(SOURCES Parameter)
 APPEND_SOURCE_FILES(SOURCES SourceTerms)
 APPEND_SOURCE_FILES(SOURCES Utils)
 
 add_library(ProcessLib ${SOURCES})
+if(BUILD_SHARED_LIBS)
+    install(TARGETS ProcessLib LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+endif()
 
 target_link_libraries(ProcessLib
-    PUBLIC BaseLib GeoLib MaterialLib MathLib MeshLib NumLib logog
-    PRIVATE MeshGeoToolsLib
+    PUBLIC BaseLib MaterialLib MathLib MeshLib NumLib logog MeshGeoToolsLib
 )
 
-if(TARGET Eigen)
-    add_dependencies(ProcessLib Eigen)
+if(OGS_USE_PYTHON)
+    add_subdirectory(BoundaryCondition/Python)
+    target_link_libraries(ProcessLib
+        PUBLIC ProcessLibBoundaryConditionPython)
 endif()
-if(TARGET Boost)
-    add_dependencies(ProcessLib Boost)
-endif()
+
 if(OGS_INSITU)
     target_link_libraries(ProcessLib InSituLib)
 endif()

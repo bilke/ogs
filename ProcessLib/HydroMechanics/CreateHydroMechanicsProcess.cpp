@@ -11,8 +11,10 @@
 
 #include <cassert>
 
-#include "MaterialLib/SolidModels/CreateLinearElasticIsotropic.h"
+#include "MaterialLib/SolidModels/MechanicsBase.h"
+#include "MaterialLib/SolidModels/CreateConstitutiveRelation.h"
 #include "ProcessLib/Output/CreateSecondaryVariables.h"
+#include "ProcessLib/Utils/ProcessUtils.h"
 
 #include "HydroMechanicsProcess.h"
 #include "HydroMechanicsProcessData.h"
@@ -99,30 +101,9 @@ std::unique_ptr<Process> createHydroMechanicsProcess(
             variable_p->getNumberOfComponents());
     }
 
-    // Constitutive relation.
-    // read type;
-    auto const constitutive_relation_config =
-        //! \ogs_file_param{prj__processes__process__HYDRO_MECHANICS__constitutive_relation}
-        config.getConfigSubtree("constitutive_relation");
-
-    auto const type =
-        //! \ogs_file_param{prj__processes__process__HYDRO_MECHANICS__constitutive_relation__type}
-        constitutive_relation_config.peekConfigParameter<std::string>("type");
-
-    std::unique_ptr<MaterialLib::Solids::MechanicsBase<DisplacementDim>>
-        material = nullptr;
-    if (type == "LinearElasticIsotropic")
-    {
-        material =
-            MaterialLib::Solids::createLinearElasticIsotropic<DisplacementDim>(
-                parameters, constitutive_relation_config);
-    }
-    else
-    {
-        OGS_FATAL(
-            "Cannot construct constitutive relation of given type \'%s\'.",
-            type.c_str());
-    }
+    auto solid_constitutive_relations =
+        MaterialLib::Solids::createConstitutiveRelations<DisplacementDim>(
+            parameters, config);
 
     // Intrinsic permeability
     auto& intrinsic_permeability = findParameter<double>(
@@ -198,16 +179,19 @@ std::unique_ptr<Process> createHydroMechanicsProcess(
         std::copy_n(b.data(), b.size(), specific_body_force.data());
     }
 
+    // Reference temperature
+    const auto& reference_temperature =
+        //! \ogs_file_param{prj__processes__process__HYDRO_MECHANICS__reference_temperature}
+        config.getConfigParameter<double>(
+            "reference_temperature", std::numeric_limits<double>::quiet_NaN());
+
     HydroMechanicsProcessData<DisplacementDim> process_data{
-        std::move(material),
-        intrinsic_permeability,
-        specific_storage,
-        fluid_viscosity,
-        fluid_density,
-        biot_coefficient,
-        porosity,
-        solid_density,
-        specific_body_force};
+        materialIDs(mesh),      std::move(solid_constitutive_relations),
+        intrinsic_permeability, specific_storage,
+        fluid_viscosity,        fluid_density,
+        biot_coefficient,       porosity,
+        solid_density,          specific_body_force,
+        reference_temperature};
 
     SecondaryVariableCollection secondary_variables;
 

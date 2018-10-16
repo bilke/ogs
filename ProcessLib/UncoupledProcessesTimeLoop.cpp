@@ -11,7 +11,6 @@
 
 #include "BaseLib/Error.h"
 #include "BaseLib/RunTime.h"
-#include "BaseLib/uniqueInsert.h"
 #include "MathLib/LinAlg/LinAlg.h"
 #include "NumLib/ODESolver/ConvergenceCriterionPerComponent.h"
 #include "NumLib/ODESolver/TimeDiscretizedODESystem.h"
@@ -55,37 +54,6 @@ static void setEquationSystem(NumLib::NonlinearSolverBase& nonlinear_solver,
             break;
         case Tag::Newton:
             setEquationSystem<Tag::Newton>(nonlinear_solver, eq_sys, conv_crit);
-            break;
-    }
-}
-
-//! Applies known solutions to the solution vector \c x, transparently
-//! for equation systems linearized with either the Picard or Newton method.
-template <NumLib::NonlinearSolverTag NLTag>
-static void applyKnownSolutions(NumLib::EquationSystem const& eq_sys,
-                                GlobalVector& x)
-{
-    using EqSys = NumLib::NonlinearSystem<NLTag>;
-    assert(dynamic_cast<EqSys const*>(&eq_sys) != nullptr);
-    auto& eq_sys_ = static_cast<EqSys const&>(eq_sys);
-
-    eq_sys_.applyKnownSolutions(x);
-}
-
-//! Applies known solutions to the solution vector \c x, transparently
-//! for equation systems linearized with either the Picard or Newton method.
-static void applyKnownSolutions(NumLib::EquationSystem const& eq_sys,
-                                NumLib::NonlinearSolverTag const nl_tag,
-                                GlobalVector& x)
-{
-    using Tag = NumLib::NonlinearSolverTag;
-    switch (nl_tag)
-    {
-        case Tag::Picard:
-            applyKnownSolutions<Tag::Picard>(eq_sys, x);
-            break;
-        case Tag::Newton:
-            applyKnownSolutions<Tag::Newton>(eq_sys, x);
             break;
     }
 }
@@ -286,8 +254,6 @@ bool solveOneTimeStepOneProcess(int const process_id, GlobalVector& x,
     // preTimestep() hook.
 
     time_disc.nextTimestep(t, delta_t);
-
-    applyKnownSolutions(ode_sys, nl_tag, x);
 
     auto const post_iteration_callback = [&](unsigned iteration,
                                              GlobalVector const& x) {
@@ -638,7 +604,7 @@ bool UncoupledProcessesTimeLoop::loop()
     INFO(
         "The whole computation of the time stepping took %u steps, in which\n"
         "\t the accepted steps are %u, and the rejected steps are %u.\n",
-        accepted_steps + rejected_steps, accepted_steps, rejected_steps)
+        accepted_steps + rejected_steps, accepted_steps, rejected_steps);
 
     // output last time step
     if (nonlinear_solver_succeeded)
@@ -652,9 +618,9 @@ bool UncoupledProcessesTimeLoop::loop()
     return nonlinear_solver_succeeded;
 }
 
-static std::string nonlinear_fixed_dt_fails_info =
-    "Nonlinear solver fails. Because of the time stepper"
-    " of FixedTimeStepping is used, the program has to be"
+static std::string const nonlinear_fixed_dt_fails_info =
+    "Nonlinear solver fails. Because the time stepper"
+    " FixedTimeStepping is used, the program has to be"
     " terminated ";
 
 bool UncoupledProcessesTimeLoop::solveUncoupledEquationSystems(
@@ -890,6 +856,9 @@ void UncoupledProcessesTimeLoop::outputSolutions(
             pcs.preTimestep(x, _start_time,
                             process_data->timestepper->getTimeStep().dt(),
                             process_id);
+            // Update secondary variables, which might be uninitialized, before
+            // output.
+            pcs.computeSecondaryVariable(_start_time, x);
         }
         if (is_staggered_coupling)
         {

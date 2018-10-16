@@ -128,6 +128,9 @@ add_library(VtkVis
     ${HEADERS}
     ${UIS}
 )
+if(BUILD_SHARED_LIBS)
+    install(TARGETS VtkVis LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+endif()
 
 if(GEOTIFF_FOUND)
     include_directories(${GEOTIFF_INCLUDE_DIRS})
@@ -135,9 +138,13 @@ if(GEOTIFF_FOUND)
 endif() # GEOTIFF_FOUND
 
 target_link_libraries(VtkVis
-    PUBLIC BaseLib GeoLib MeshLib DataHolderLib QtBase ${VTK_LIBRARIES} NetCdfDialogLib
-    PRIVATE MathLib ApplicationsFileIO Qt5::Gui logog
+    PUBLIC BaseLib GeoLib MeshLib DataHolderLib QtBase vtkIOImage
+    PRIVATE MathLib ApplicationsFileIO Qt5::Gui logog NetCdfDialogLib
 )
+if(NOT APPLE AND OGS_USE_CONAN)
+    # HACK for unresolved external
+    target_link_libraries(VtkVis PUBLIC vtkGUISupportQt-8.1)
+endif()
 set_property(TARGET VtkVis PROPERTY FOLDER "DataExplorer")
 
 if(OGS_USE_PCH)

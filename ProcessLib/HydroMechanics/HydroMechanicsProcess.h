@@ -26,8 +26,6 @@ struct LocalAssemblerInterface;
 template <int DisplacementDim>
 class HydroMechanicsProcess final : public Process
 {
-    using Base = Process;
-
 public:
     HydroMechanicsProcess(
         MeshLib::Mesh& mesh,
@@ -118,6 +116,8 @@ private:
     /// Solutions of the previous time step
     std::array<std::unique_ptr<GlobalVector>, 2> _xs_previous_timestep;
 
+    void computeSecondaryVariableConcrete(const double t,
+                                          GlobalVector const& x) override;
     /**
      * @copydoc ProcessLib::Process::getDOFTableForExtrapolatorData()
      */

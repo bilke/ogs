@@ -12,6 +12,7 @@
 #include <memory>
 #include <vector>
 
+#include "MaterialLib/PhysicalConstant.h"
 #include "MaterialLib/SolidModels/LinearElasticIsotropic.h"
 #include "MathLib/KelvinVector.h"
 #include "MathLib/LinAlg/Eigen/EigenMapTools.h"
@@ -35,7 +36,8 @@ template <typename BMatricesType, typename ShapeMatrixTypeDisplacement,
 struct IntegrationPointData final
 {
     explicit IntegrationPointData(
-        MaterialLib::Solids::MechanicsBase<DisplacementDim>& solid_material)
+        MaterialLib::Solids::MechanicsBase<DisplacementDim> const&
+            solid_material)
         : solid_material(solid_material),
           material_state_variables(
               solid_material.createMaterialStateVariables())
@@ -54,7 +56,7 @@ struct IntegrationPointData final
     typename ShapeMatricesTypePressure::NodalRowVectorType N_p;
     typename ShapeMatricesTypePressure::GlobalDimNodalMatrixType dNdx_p;
 
-    MaterialLib::Solids::MechanicsBase<DisplacementDim>& solid_material;
+    MaterialLib::Solids::MechanicsBase<DisplacementDim> const& solid_material;
     std::unique_ptr<typename MaterialLib::Solids::MechanicsBase<
         DisplacementDim>::MaterialStateVariables>
         material_state_variables;
@@ -72,11 +74,12 @@ struct IntegrationPointData final
         double const t,
         SpatialPosition const& x_position,
         double const dt,
-        DisplacementVectorType const& /*u*/)
+        DisplacementVectorType const& /*u*/,
+        double const T)
     {
         auto&& solution = solid_material.integrateStress(
             t, x_position, dt, eps_prev, eps, sigma_eff_prev,
-            *material_state_variables);
+            *material_state_variables, T);
 
         if (!solution)
             OGS_FATAL("Computation of local constitutive relation failed.");
@@ -163,6 +166,8 @@ public:
         }
     }
 
+    void computeSecondaryVariableConcrete(
+        double const t, std::vector<double> const& local_x) override;
     void postNonLinearSolverConcrete(std::vector<double> const& local_x,
                                      double const t,
                                      bool const use_monolithic_scheme) override;

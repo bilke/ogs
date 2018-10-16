@@ -85,13 +85,13 @@ public:
     template <typename T>
     bool existsPropertyVector(std::string const& name) const;
 
-    /// Returns a property vector with given \c name or nullptr if no such
-    /// property vector exists.
+    /// Returns a property vector with given \c name or aborts calling OGS_FATAL
+    /// if no such property vector exists.
     template <typename T>
     PropertyVector<T> const* getPropertyVector(std::string const& name) const;
 
-    /// Returns a property vector with given \c name or nullptr if no such
-    /// property vector exists.
+    /// Returns a property vector with given \c name or aborts calling OGS_FATAL
+    /// if no such property vector exists.
     template <typename T>
     PropertyVector<T>* getPropertyVector(std::string const& name);
 
@@ -123,6 +123,9 @@ public:
     Properties() = default;
 
     Properties(Properties const& properties);
+    Properties(Properties&& properties) = default;
+    Properties& operator=(Properties const& properties);
+    Properties& operator=(Properties&& properties) = default;
 
     ~Properties();
 

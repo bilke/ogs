@@ -143,10 +143,10 @@ AddTest(
 )
 
 AddTest(
-    NAME HT_Balance
+    NAME HT_calculatesurfaceflux
     PATH Parabolic/HT/SimpleSynthetics
     EXECUTABLE ogs
-    EXECUTABLE_ARGS balance_ht_cube_1e3.prj
+    EXECUTABLE_ARGS calculatesurfaceflux_ht_cube_1e3.prj
     WRAPPER time
     TESTER vtkdiff
     REQUIREMENTS NOT OGS_USE_MPI
@@ -160,10 +160,10 @@ AddTest(
 )
 
 AddTest(
-    NAME LARGE_HT_Balance
+    NAME LARGE_HT_calculatesurfaceflux
     PATH Parabolic/HT/SimpleSynthetics
     EXECUTABLE ogs
-    EXECUTABLE_ARGS balance_ht_cube_1e4.prj
+    EXECUTABLE_ARGS calculatesurfaceflux_ht_cube_1e4.prj
     WRAPPER time
     TESTER vtkdiff
     REQUIREMENTS NOT OGS_USE_MPI
@@ -216,8 +216,8 @@ AddTest(
     TESTER vtkdiff
     REQUIREMENTS NOT (OGS_USE_LIS OR OGS_USE_MPI)
     DIFF_DATA
-    th_decovalex.vtu th_decovalex_pcs_1_ts_40_t_18.000000.vtu T_ref T 1e-14  1.e-14
-    th_decovalex.vtu th_decovalex_pcs_1_ts_40_t_18.000000.vtu p_ref p 1e-14  1.e-14
+    th_decovalex.vtu th_decovalex_pcs_1_ts_40_t_18.000000.vtu T_ref T 5e-12 1.e-14
+    th_decovalex.vtu th_decovalex_pcs_1_ts_40_t_18.000000.vtu p_ref p 1e-7 1.e-14
     VIS th_decovalex_pcs_1_ts_78_t_1000.000000.vtu
 )
 
@@ -349,6 +349,18 @@ AddTest(
     CoupledPressureParabolicTemperatureParabolic_ts_10_expected.vtu CoupledPressureParabolicTemperatureParabolicStaggered_pcs_1_ts_10_t_1.000000.vtu darcy_velocity darcy_velocity 1e-10 1e-10
 )
 
+AddTest(
+    NAME HT_SimpleSynthetics_constraint_dirichlet_bc
+    PATH Parabolic/HT/SimpleSynthetics
+    EXECUTABLE ogs
+    EXECUTABLE_ARGS constraint_bc_1e3.prj
+    TESTER vtkdiff
+    REQUIREMENTS NOT OGS_USE_MPI
+    DIFF_DATA
+    GLOB constraint_bc_1e3_pcs_0_ts_*.vtu T T 1e-14 1e-13
+    GLOB constraint_bc_1e3_pcs_0_ts_*.vtu p p 1e-15 1e-14
+)
+
 # MPI/PETSc tests
 AddTest(
     NAME Parallel_LARGE_2D_ThermalConvection_constviscosity
@@ -370,7 +382,7 @@ AddTest(
 )
 
 AddTest(
-    NAME LARGE_2D_ThermalConvection_constviscosityStaggeredScheme
+    NAME Parallel_LARGE_2D_ThermalConvection_constviscosityStaggeredScheme
     PATH Parabolic/HT/StaggeredCoupling/ConstViscosity
     EXECUTABLE_ARGS square_5500x5500_staggered_scheme.prj
     WRAPPER mpirun

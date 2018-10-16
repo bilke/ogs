@@ -15,6 +15,7 @@
 #pragma once
 
 #include <cstdlib>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -284,5 +285,19 @@ PropertyVector<T>* getOrCreateMeshProperty(Mesh& mesh,
     result->resize(numberOfMeshItems() * number_of_components);
     return result;
 }
+
+/// Returns the material ids property vector defined on the mesh.
+///
+/// The material ids are always an \c int property named "MaterialIDs".
+/// If the property does not exists (or is of different type), a nullptr is
+/// returned.
+PropertyVector<int> const* materialIDs(Mesh const& mesh);
+
+/// Creates a new mesh from a vector of elements.
+///
+/// \note The elements are owned by the returned mesh object as well as the
+/// nodes and will be destructed together with the mesh.
+std::unique_ptr<MeshLib::Mesh> createMeshFromElementSelection(
+    std::string mesh_name, std::vector<MeshLib::Element*> const& elements);
 
 } /* namespace */

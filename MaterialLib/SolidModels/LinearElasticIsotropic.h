@@ -63,7 +63,6 @@ public:
         : public MechanicsBase<DisplacementDim>::MaterialStateVariables
     {
         void pushBackState() override {}
-
         MaterialStateVariables& operator=(MaterialStateVariables const&) =
             default;
         typename MechanicsBase<DisplacementDim>::MaterialStateVariables&
@@ -76,7 +75,7 @@ public:
 
     std::unique_ptr<
         typename MechanicsBase<DisplacementDim>::MaterialStateVariables>
-    createMaterialStateVariables() override
+    createMaterialStateVariables() const override
     {
         return std::unique_ptr<
             typename MechanicsBase<DisplacementDim>::MaterialStateVariables>{
@@ -114,17 +113,19 @@ public:
                                    DisplacementDim>::MaterialStateVariables>,
                                KelvinMatrix>>
     integrateStress(
-        double const t,
-        ProcessLib::SpatialPosition const& x,
-        double const /*dt*/,
-        KelvinVector const& eps_prev,
-        KelvinVector const& eps,
-        KelvinVector const& sigma_prev,
+        double const t, ProcessLib::SpatialPosition const& x,
+        double const /*dt*/, KelvinVector const& eps_prev,
+        KelvinVector const& eps, KelvinVector const& sigma_prev,
         typename MechanicsBase<DisplacementDim>::MaterialStateVariables const&
-            material_state_variables) override;
+            material_state_variables,
+        double const T) const override;
 
-    MaterialProperties getMaterialProperties() {return _mp;}
+    KelvinMatrix getElasticTensor(double const t,
+                                  ProcessLib::SpatialPosition const& x,
+                                  double const T) const;
 
+
+    MaterialProperties getMaterialProperties() { return _mp; }
 protected:
     MaterialProperties _mp;
 };

@@ -1,6 +1,13 @@
-add_executable(partmesh PartitionMesh.cpp NodeWiseMeshPartitioner.h NodeWiseMeshPartitioner.cpp)
+if(COMPILER_IS_GCC AND CMAKE_CXX_COMPILER_VERSION VERSION_EQUAL "5.4")
+    message(WARNING "gcc 5.4 segfaults when compiling partmesh!\n"
+        "Disabled partmesh compilation!")
+    return()
+endif()
+add_executable(partmesh PartitionMesh.cpp Metis.cpp NodeWiseMeshPartitioner.cpp)
+
 set_target_properties(partmesh PROPERTIES FOLDER Utilities)
 target_link_libraries(partmesh MeshLib)
+add_dependencies(partmesh mpmetis)
 
 ####################
 ### Installation ###

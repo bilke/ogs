@@ -1,16 +1,23 @@
+# Disallow in-source builds as the git project cluttered with generated files
+# probably confuses people. source/build* is still allowed!
+if("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
+   message(FATAL_ERROR "In-source builds are not allowed!\n"
+    "Make sure to remove CMakeCache.txt and CMakeFiles/ "
+    "from the source directory!")
+endif()
+
 # Set additional CMake modules path
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
   "${CMAKE_CURRENT_SOURCE_DIR}/scripts/cmake"
   "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/cmake-modules")
 
-# Load addional modules
-include(UseBackportedModules)
-include(OptionRequires)
-include(CppcheckTargets)
+list(APPEND CMAKE_PREFIX_PATH
+  $ENV{HOMEBREW_ROOT}             # Homebrew package manager on Mac OS
+  $ENV{CMAKE_LIBRARY_SEARCH_PATH} # Environment variable, Windows
+  ${CMAKE_LIBRARY_SEARCH_PATH})   # CMake option, Windows
 
-include(ProcessorCount)
-ProcessorCount(NUM_PROCESSORS)
-set(NUM_PROCESSORS ${NUM_PROCESSORS} CACHE STRING "Processor count")
+# Load addional modules
+include(GNUInstallDirs)
 
 # Check if this project is included in another
 if(NOT PROJECT_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
@@ -32,4 +39,15 @@ site_name(HOSTNAME)
 # Check if we are running under CI
 if(DEFINED ENV{JENKINS_URL} OR DEFINED ENV{CI})
     set(IS_CI ON CACHE INTERNAL "")
+endif()
+
+if(MSVC)
+    cmake_host_system_information(RESULT ram_mb QUERY TOTAL_PHYSICAL_MEMORY)
+    if(ram_mb LESS 16000)
+        message(STATUS "Insufficient RAM (${ram_mb} MB)! Setting "
+            "OGS_EIGEN_DYNAMIC_SHAPE_MATRICES=ON.\n   "
+            "If you get out-of-heap space errors see\n   "
+            "https://www.opengeosys.org/docs/devguide/troubleshooting/build/")
+        set(OGS_EIGEN_DYNAMIC_SHAPE_MATRICES ON)
+    endif()
 endif()

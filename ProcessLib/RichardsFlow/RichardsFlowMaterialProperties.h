@@ -49,7 +49,7 @@ public:
     using ArrayType = MaterialLib::Fluid::FluidProperty::ArrayType;
 
     RichardsFlowMaterialProperties(
-        boost::optional<MeshLib::PropertyVector<int> const&> const material_ids,
+        MeshLib::PropertyVector<int> const* const material_ids,
         std::unique_ptr<MaterialLib::Fluid::FluidProperties>&& fluid_properties,
         std::vector<std::unique_ptr<MaterialLib::PorousMedium::Permeability>>&&
             intrinsic_permeability_models,
@@ -86,6 +86,10 @@ public:
                                    const double p, const double T,
                                    const double saturation) const;
 
+    double getRelativePermeabilityDerivative(
+        const double t, const ProcessLib::SpatialPosition& pos, const double p,
+        const double T, const double saturation) const;
+
     double getSaturation(const int material_id, const double t,
                          const ProcessLib::SpatialPosition& pos, const double p,
                          const double T, const double pc) const;
@@ -93,6 +97,10 @@ public:
                                    const ProcessLib::SpatialPosition& pos,
                                    const double p, const double T,
                                    const double saturation) const;
+    double getSaturationDerivative2(const int material_id, const double t,
+                                    const ProcessLib::SpatialPosition& pos,
+                                    const double p, const double T,
+                                    const double saturation) const;
     double getFluidDensity(const double p, const double T) const;
     double getFluidViscosity(const double p, const double T) const;
 
@@ -100,7 +108,7 @@ private:
     /**
     *  Material IDs must be given as mesh element properties.
     */
-    boost::optional<MeshLib::PropertyVector<int> const&> const _material_ids;
+    MeshLib::PropertyVector<int> const* const _material_ids;
 
     const std::unique_ptr<MaterialLib::Fluid::FluidProperties>
         _fluid_properties;

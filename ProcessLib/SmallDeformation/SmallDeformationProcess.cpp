@@ -85,37 +85,51 @@ void SmallDeformationProcess<DisplacementDim>::initializeConcreteProcess(
 
     // TODO move the two data members somewhere else.
     // for extrapolation of secondary variables
-    std::vector<MeshLib::MeshSubsets> all_mesh_subsets_single_component;
-    all_mesh_subsets_single_component.emplace_back(
-        _mesh_subset_all_nodes.get());
+    std::vector<MeshLib::MeshSubset> all_mesh_subsets_single_component{
+        *_mesh_subset_all_nodes};
     _local_to_global_index_map_single_component =
         std::make_unique<NumLib::LocalToGlobalIndexMap>(
             std::move(all_mesh_subsets_single_component),
             // by location order is needed for output
             NumLib::ComponentOrder::BY_LOCATION);
 
-    Base::_secondary_variables.addSecondaryVariable(
+    _secondary_variables.addSecondaryVariable(
         "free_energy_density",
         makeExtrapolator(1, getExtrapolator(), _local_assemblers,
                          &LocalAssemblerInterface::getIntPtFreeEnergyDensity));
 
-    Base::_secondary_variables.addSecondaryVariable(
+    _secondary_variables.addSecondaryVariable(
         "sigma",
         makeExtrapolator(MathLib::KelvinVector::KelvinVectorType<
                              DisplacementDim>::RowsAtCompileTime,
                          getExtrapolator(), _local_assemblers,
                          &LocalAssemblerInterface::getIntPtSigma));
 
-    Base::_secondary_variables.addSecondaryVariable(
+    _secondary_variables.addSecondaryVariable(
         "epsilon",
         makeExtrapolator(MathLib::KelvinVector::KelvinVectorType<
                              DisplacementDim>::RowsAtCompileTime,
                          getExtrapolator(), _local_assemblers,
                          &LocalAssemblerInterface::getIntPtEpsilon));
 
+    //
     // enable output of internal variables defined by material models
-    auto const internal_variables =
-        _process_data.material->getInternalVariables();
+    //
+
+    // Collect the internal variables for all solid materials.
+    std::vector<typename MaterialLib::Solids::MechanicsBase<
+        DisplacementDim>::InternalVariable>
+        internal_variables;
+    for (auto const& material_id__solid_material :
+         _process_data.solid_materials)
+    {
+        auto const variables =
+            material_id__solid_material.second->getInternalVariables();
+        copy(begin(variables), end(variables),
+             back_inserter(internal_variables));
+    }
+
+    // Register the internal variables.
     for (auto const& internal_variable : internal_variables)
     {
         auto const& name = internal_variable.name;
@@ -156,7 +170,7 @@ void SmallDeformationProcess<DisplacementDim>::initializeConcreteProcess(
                 return cache;
             });
 
-        Base::_secondary_variables.addSecondaryVariable(
+        _secondary_variables.addSecondaryVariable(
             name,
             makeExtrapolator(num_components, getExtrapolator(),
                              _local_assemblers, std::move(getIntPtValues)));

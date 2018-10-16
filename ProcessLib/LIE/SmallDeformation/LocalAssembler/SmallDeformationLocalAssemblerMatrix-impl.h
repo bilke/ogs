@@ -16,6 +16,8 @@
 
 #include <Eigen/Eigen>
 
+#include "MaterialLib/PhysicalConstant.h"
+#include "MaterialLib/SolidModels/SelectSolidConstitutiveRelation.h"
 #include "MathLib/LinAlg/Eigen/EigenMapTools.h"
 
 #include "NumLib/Fem/ShapeMatrixPolicy.h"
@@ -61,9 +63,12 @@ SmallDeformationLocalAssemblerMatrix<ShapeFunction, IntegrationMethod,
                           DisplacementDim>(e, is_axially_symmetric,
                                            _integration_method);
 
+    auto& solid_material = MaterialLib::Solids::selectSolidConstitutiveRelation(
+        _process_data.solid_materials, _process_data.material_ids, e.getID());
+
     for (unsigned ip = 0; ip < n_integration_points; ip++)
     {
-        _ip_data.emplace_back(*_process_data._material);
+        _ip_data.emplace_back(solid_material);
         auto& ip_data = _ip_data[ip];
         auto const& sm = shape_matrices[ip];
         ip_data.N = sm.N;
@@ -145,7 +150,8 @@ void SmallDeformationLocalAssemblerMatrix<ShapeFunction, IntegrationMethod,
                     local_x.data(), ShapeFunction::NPOINTS * DisplacementDim);
 
         auto&& solution = _ip_data[ip]._solid_material.integrateStress(
-            t, x_position, _process_data.dt, eps_prev, eps, sigma_prev, *state);
+            t, x_position, _process_data.dt, eps_prev, eps, sigma_prev, *state,
+            _process_data._reference_temperature);
 
         if (!solution)
         {
@@ -164,7 +170,8 @@ template <typename ShapeFunction, typename IntegrationMethod,
           int DisplacementDim>
 void SmallDeformationLocalAssemblerMatrix<ShapeFunction, IntegrationMethod,
                                           DisplacementDim>::
-    postTimestepConcrete(std::vector<double> const& /*local_x*/)
+    computeSecondaryVariableConcreteWithVector(
+        double const /*t*/, Eigen::VectorXd const& /*local_x*/)
 {
     // Compute average value per element
     const int n = DisplacementDim == 2 ? 4 : 6;

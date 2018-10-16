@@ -11,7 +11,6 @@
 
 #include <logog/include/logog.hpp>
 
-#include "BaseLib/reorderVector.h"
 #include "MaterialLib/Fluid/FluidProperty.h"
 #include "MaterialLib/Fluid/FluidProperties/CreateFluidProperties.h"
 #include "MaterialLib/PorousMedium/Porosity/Porosity.h"
@@ -35,8 +34,7 @@ namespace RichardsFlow
 std::unique_ptr<RichardsFlowMaterialProperties>
 createRichardsFlowMaterialProperties(
     BaseLib::ConfigTree const& config,
-    boost::optional<MeshLib::PropertyVector<int> const&>
-        material_ids,
+    MeshLib::PropertyVector<int> const* const material_ids,
     std::vector<std::unique_ptr<ParameterBase>> const& parameters)
 {
     DBUG("Reading material properties of Richards flow process.");

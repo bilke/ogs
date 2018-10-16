@@ -7,7 +7,6 @@ if(MSVC)
 endif()
 
 APPEND_SOURCE_FILES(TEST_SOURCES)
-APPEND_SOURCE_FILES(TEST_SOURCES ApplicationsLib)
 APPEND_SOURCE_FILES(TEST_SOURCES BaseLib)
 APPEND_SOURCE_FILES(TEST_SOURCES FileIO)
 APPEND_SOURCE_FILES(TEST_SOURCES GeoLib)
@@ -39,7 +38,6 @@ add_executable(testrunner ${TEST_SOURCES})
 set_target_properties(testrunner PROPERTIES FOLDER Testing)
 
 target_link_libraries(testrunner
-    ApplicationsLib
     ApplicationsFileIO
     GTest
     MeshGeoToolsLib
@@ -48,6 +46,7 @@ target_link_libraries(testrunner
     NumLib
     ProcessLib
     Threads::Threads
+    ${VTK_LIBRARIES}
 )
 
 if(OGS_BUILD_PROCESS_LIE)
@@ -71,7 +70,7 @@ if(OGS_INSITU)
 endif()
 
 if(Qt5XmlPatterns_FOUND)
-    target_link_libraries(testrunner Qt5::Core Qt5::Gui Qt5::Xml Qt5::Network VtkVis vtkGUISupportQt QtDataView)
+    target_link_libraries(testrunner Qt5::Core Qt5::Gui Qt5::Xml Qt5::Network VtkVis QtDataView)
     if(CMAKE_CROSSCOMPILING)
         target_link_libraries(testrunner
             ${QT_XML_DEPS_LIBRARIES}

@@ -32,8 +32,11 @@ template <int DisplacementDim>
 struct HydroMechanicsProcessData
 {
     HydroMechanicsProcessData(
-        std::unique_ptr<MaterialLib::Solids::MechanicsBase<DisplacementDim>>&&
-            material_,
+        MeshLib::PropertyVector<int> const* const material_ids_,
+        std::map<int,
+                 std::unique_ptr<
+                     MaterialLib::Solids::MechanicsBase<DisplacementDim>>>&&
+            solid_materials_,
         Parameter<double> const& intrinsic_permeability_,
         Parameter<double> const& specific_storage_,
         Parameter<double> const& fluid_viscosity_,
@@ -42,8 +45,10 @@ struct HydroMechanicsProcessData
         Parameter<double> const& porosity_,
         Parameter<double> const& solid_density_,
         Eigen::Matrix<double, DisplacementDim, 1>
-            specific_body_force_)
-        : material{std::move(material_)},
+            specific_body_force_,
+        double const reference_temperature_)
+        : material_ids(material_ids_),
+          solid_materials{std::move(solid_materials_)},
           intrinsic_permeability(intrinsic_permeability_),
           specific_storage(specific_storage_),
           fluid_viscosity(fluid_viscosity_),
@@ -51,24 +56,12 @@ struct HydroMechanicsProcessData
           biot_coefficient(biot_coefficient_),
           porosity(porosity_),
           solid_density(solid_density_),
-          specific_body_force(std::move(specific_body_force_))
+          specific_body_force(std::move(specific_body_force_)),
+          reference_temperature(reference_temperature_)
     {
     }
 
-    HydroMechanicsProcessData(HydroMechanicsProcessData&& other)
-        : material{std::move(other.material)},
-          intrinsic_permeability(other.intrinsic_permeability),
-          specific_storage(other.specific_storage),
-          fluid_viscosity(other.fluid_viscosity),
-          fluid_density(other.fluid_density),
-          biot_coefficient(other.biot_coefficient),
-          porosity(other.porosity),
-          solid_density(other.solid_density),
-          specific_body_force(other.specific_body_force),
-          dt(other.dt),
-          t(other.t)
-    {
-    }
+    HydroMechanicsProcessData(HydroMechanicsProcessData&& other) = default;
 
     //! Copies are forbidden.
     HydroMechanicsProcessData(HydroMechanicsProcessData const&) = delete;
@@ -79,10 +72,14 @@ struct HydroMechanicsProcessData
     //! Assignments are not needed.
     void operator=(HydroMechanicsProcessData&&) = delete;
 
+    MeshLib::PropertyVector<int> const* const material_ids;
+
     /// The constitutive relation for the mechanical part.
     /// \note Linear elasticity is the only supported one in the moment.
-    std::unique_ptr<MaterialLib::Solids::MechanicsBase<DisplacementDim>>
-        material;
+    std::map<
+        int,
+        std::unique_ptr<MaterialLib::Solids::MechanicsBase<DisplacementDim>>>
+        solid_materials;
     /// Permeability of the solid. A scalar quantity, Parameter<double>.
     Parameter<double> const& intrinsic_permeability;
     /// Volumetric average specific storage of the solid and fluid phases.
@@ -104,6 +101,10 @@ struct HydroMechanicsProcessData
     Eigen::Matrix<double, DisplacementDim, 1> const specific_body_force;
     double dt = 0.0;
     double t = 0.0;
+
+    double const reference_temperature;
+
+    MeshLib::PropertyVector<double>* pressure_interpolated = nullptr;
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
 };

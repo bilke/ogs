@@ -32,25 +32,24 @@ template <int DisplacementDim>
 struct SmallDeformationProcessData
 {
     SmallDeformationProcessData(
-        std::unique_ptr<MaterialLib::Solids::MechanicsBase<DisplacementDim>>&&
-            material,
+        MeshLib::PropertyVector<int> const* const material_ids_,
+        std::map<int,
+                 std::unique_ptr<
+                     MaterialLib::Solids::MechanicsBase<DisplacementDim>>>&&
+            solid_materials_,
         Parameter<double> const& solid_density_,
         Eigen::Matrix<double, DisplacementDim, 1>
-            specific_body_force_)
-        : material{std::move(material)},
+            specific_body_force_,
+        double const reference_temperature_)
+        : material_ids(material_ids_),
+          solid_materials{std::move(solid_materials_)},
           solid_density(solid_density_),
-          specific_body_force(std::move(specific_body_force_))
+          specific_body_force(std::move(specific_body_force_)),
+          reference_temperature(reference_temperature_)
     {
     }
 
-    SmallDeformationProcessData(SmallDeformationProcessData&& other)
-        : material{std::move(other.material)},
-          solid_density(other.solid_density),
-          specific_body_force(other.specific_body_force),
-          dt{other.dt},
-          t{other.t}
-    {
-    }
+    SmallDeformationProcessData(SmallDeformationProcessData&& other) = default;
 
     //! Copies are forbidden.
     SmallDeformationProcessData(SmallDeformationProcessData const&) = delete;
@@ -61,8 +60,12 @@ struct SmallDeformationProcessData
     //! Assignments are not needed.
     void operator=(SmallDeformationProcessData&&) = delete;
 
-    std::unique_ptr<MaterialLib::Solids::MechanicsBase<DisplacementDim>>
-        material;
+    MeshLib::PropertyVector<int> const* const material_ids;
+
+    std::map<
+        int,
+        std::unique_ptr<MaterialLib::Solids::MechanicsBase<DisplacementDim>>>
+        solid_materials;
     /// Solid's density. A scalar quantity, Parameter<double>.
     Parameter<double> const& solid_density;
     /// Specific body forces applied to the solid.
@@ -71,6 +74,7 @@ struct SmallDeformationProcessData
     Eigen::Matrix<double, DisplacementDim, 1> const specific_body_force;
     double dt = 0;
     double t = 0;
+    double const reference_temperature;
 };
 
 }  // namespace SmallDeformation
