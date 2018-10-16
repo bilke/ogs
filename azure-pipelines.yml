@@ -1,0 +1,14 @@
+pool:
+  vmImage: 'VS2017-Win2016'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- task: CMake@1
+  inputs:
+    cmakeArgs: '-DCMAKE_BUILD_TYPE=$(buildConfiguration)'
+
+- task: CmdLine@2
+  inputs:
+    script: 'cmake --build build --config $(buildConfiguration) --target package'
