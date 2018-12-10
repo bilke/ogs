@@ -94,8 +94,8 @@ pipeline {
                   '-DOGS_BUILD_UTILS=OFF ' +
                   '-DOGS_BUILD_TESTS=OFF '
               }
-              sh 'chrpath /home/jenkins/.conan/data/Qt/5.11.2/bilke/stable/package/fe4decab54d544e50ec3754fe135ce2be3596e5f/bin/uic'
-              sh 'chrpath -r \\\\$ORIGIN/../lib /home/jenkins/.conan/data/Qt/5.11.2/bilke/stable/package/fe4decab54d544e50ec3754fe135ce2be3596e5f/bin/uic'
+              sh 'chrpath /home/jenkins/cache/conan/.conan/data/Qt/5.11.2/bilke/stable/package/fe4decab54d544e50ec3754fe135ce2be3596e5f/bin/uic'
+              sh 'chrpath -r \\\\$ORIGIN/../lib /home/jenkins/cache/conan/.conan/data/Qt/5.11.2/bilke/stable/package/fe4decab54d544e50ec3754fe135ce2be3596e5f/bin/uic'
               build { log="build.log" }
               archiveArtifacts 'build/*.tar.gz'
               build { target="doc" }
