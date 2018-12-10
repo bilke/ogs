@@ -55,5 +55,6 @@ RUN curl https://include-what-you-use.org/downloads/include-what-you-use-0.8-x86
   && rm include-what-you-use-0.8-x86_64-linux-gnu-ubuntu-16.04.tar.gz
 
 RUN apt-get install -y mesa-common-dev libgl1-mesa-dev libxt-dev wget
+RUN apt-get install -y chrpath
 
 USER jenkins

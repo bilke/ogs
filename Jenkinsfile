@@ -88,33 +88,13 @@ pipeline {
               configure {
                 cmakeOptions =
                   '-DOGS_CPU_ARCHITECTURE=generic ' +
-                  '-DDOCS_GENERATE_LOGFILE=ON ' + // redirects to build/DoxygenWarnings.log
-                  '-DOGS_USE_PYTHON=ON ' +
-                  '-DOGS_BUILD_UTILS=ON '
-              }
-              build { }
-              archiveArtifacts 'build/*.tar.gz,build/conaninfo.txt'
-              build { target="tests" }
-              build { target="ctest" }
-              build { target="doc" }
-              // TODO: .*DOT_GRAPH_MAX_NODES.
-              //       .*potential recursive class relation.*
-              recordIssues tools: [[pattern: 'build/DoxygenWarnings.log',
-                tool: [$class: 'Doxygen']]],
-                unstableTotalAll: 24
-              dir('build/docs') { stash(name: 'doxygen') }
-              publishHTML(target: [allowMissing: false, alwaysLinkToLastBuild: true,
-                  keepAll: true, reportDir: 'build/docs', reportFiles: 'index.html',
-                  reportName: 'Doxygen'])
-              configure {
-                cmakeOptions =
-                  '-DOGS_CPU_ARCHITECTURE=generic ' +
                   '-DOGS_USE_PYTHON=ON ' +
                   '-DOGS_USE_PCH=OFF ' +     // see #1992
                   '-DOGS_BUILD_GUI=ON ' +
-                  '-DOGS_BUILD_UTILS=ON ' +
+                  '-DOGS_BUILD_UTILS=OFF ' +
                   '-DOGS_BUILD_TESTS=OFF '
               }
+              sh 'chrpath -r \$ORIGIN/../lib /home/jenkins/.conan/data/Qt/5.11.2/bilke/stable/package/fe4decab54d544e50ec3754fe135ce2be3596e5f/bin/uic'
               build { log="build.log" }
               archiveArtifacts 'build/*.tar.gz'
               build { target="doc" }
