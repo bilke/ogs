@@ -77,7 +77,7 @@ pipeline {
             dockerfile {
               filename 'Dockerfile.gcc.full'
               dir 'scripts/docker'
-              label 'docker'
+              label 'envinf11w'
               args '-v /home/jenkins/cache:/home/jenkins/cache'
               additionalBuildArgs '--pull'
             }
