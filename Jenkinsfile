@@ -77,7 +77,7 @@ pipeline {
             dockerfile {
               filename 'Dockerfile.gcc.full'
               dir 'scripts/docker'
-              label 'envinf11w'
+              label 'singularity1'
               args '-v /home/jenkins/cache:/home/jenkins/cache --user jenkins:jenkins'
               additionalBuildArgs '--pull'
             }
