@@ -308,6 +308,7 @@ endif()
 # Add subdirectories with the projects
 add_subdirectory( ThirdParty )
 include_directories( SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty )
+set(gtest_force_shared_crt ON CACHE INTERNAL "") # Use dynamic MSVC runtime
 include_directories( SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/googletest/googletest/include )
 include_directories( SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/autocheck/include )
 include_directories( SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/tclap/include )
