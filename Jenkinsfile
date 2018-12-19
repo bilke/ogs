@@ -84,7 +84,7 @@ pipeline {
           }
           steps {
             script {
-              sh 'conan user'
+              sh 'git submodule sync'
               configure {
                 cmakeOptions =
                   '-DOGS_CPU_ARCHITECTURE=generic ' +
@@ -151,7 +151,7 @@ pipeline {
           }
           steps {
             script {
-              sh 'conan user'
+              sh 'git submodule sync'
               configure {
                 cmakeOptions =
                   '-DOGS_CPU_ARCHITECTURE=generic '
@@ -174,6 +174,7 @@ pipeline {
           agent { label "envinf1"}
           steps {
             script {
+              sh 'git submodule sync'
               configure {
                 cmakeOptions =
                   '-DOGS_BUILD_UTILS=ON ' +
@@ -208,6 +209,7 @@ pipeline {
           steps {
             script {
               configure {
+                sh 'git submodule sync'
                 cmakeOptions =
                   '-DOGS_BUILD_UTILS=ON ' +
                   '-DBUILD_SHARED_LIBS=ON ' +
@@ -247,6 +249,7 @@ pipeline {
           steps {
             script {
               // CLI
+              bat 'git submodule sync'
               bat 'conan remove --locks'
               configure {
                 cmakeOptions =
@@ -293,6 +296,7 @@ pipeline {
           agent { label "mac"}
           steps {
             script {
+              sh 'git submodule sync'
               configure {
                 cmakeOptions =
                   '-DOGS_CPU_ARCHITECTURE=core2 ' +
@@ -371,7 +375,7 @@ pipeline {
           }
           steps {
             script {
-              sh 'conan user'
+              sh 'git submodule sync'
               sh 'find $CONAN_USER_HOME -name "system_reqs.txt" -exec rm {} \\;'
               configure {
                 cmakeOptions =
@@ -481,7 +485,7 @@ pipeline {
           }
           steps {
             script {
-              sh 'conan user'
+              sh 'git submodule sync'
               sh 'find $CONAN_USER_HOME -name "system_reqs.txt" -exec rm {} \\;'
               configure {
                 cmakeOptions =
