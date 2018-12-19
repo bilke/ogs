@@ -1,0 +1,430 @@
++++
+title = "Visualization"
+author = "Agnes Sachse"
+date = "2018-05-29"
++++
+
+## Visualization in Environmental Sciences
+
+Visualization is a useful tool for analyzing, interpreting, and detecting errors in spatial data. Visualization makes it easier to understand complicated issues. They also support interdisciplinary exchange and can enrich presentations.
+
+------------------------------------------
+
+## Data Visualization in OpenGeoSys
+
+The OpenGeoSys Data Explorer (OGS DE) is a graphical user interface and provides a quick visualization of modeling results in VTK format. 
+The Data Explorer is part of the interdisciplinary open source software project OpenGeoSys (OGS) originally developed for the simulation of THMC processes within fractured-porous media (Wang and Kolditz 2007).
+
+![*Figure: Data Visualization in OpenGeoSys Data Explorer (K. Rink et al., 2012)*](../Rink_OGSDE_2012_IWASPaper.gif){ width=40% }
+![*Figure: The graphical user interface of the Data Explorer shows a number of data sets from a groundwater recharge study (K. Rink in A. Sachse et al., 2015)*](../OGSDE_Sachse_etal_2015_ComputationalHydrology_I.jpg){ width=40% }
+
+
+References:
+
+1) Kolditz O, Bauer S, Bilke L, Böttcher N, Delfs JO, Fischer T, Görke UJ, Kalbacher T, Kosakowski G, McDermott CI, Park CH, Radu F, Rink K, Shao H, Shao HB, Sun F, Sun YY, Singh AK, Taron J, Walther M, Wang W, Watanabe N, Wu Y, Xie M, Xu W, Zehner B (2012) OpenGeoSys: an open source initiative for numerical  simulation  of  thermo-hydro-mechanical/chemical (THM/C)  processes  in  porous  media.  Environ  Earth  Sci 67:589–599. doi:10.1007/s12665-012-1546-x
+
+2) Rink K, Kalbacher T, Kolditz O (2012) Visual data exploration for hydrological analysis. Environ
+Earth Sci 65(5):1395–1403. doi:10.1007/s12665-011-1230-6
+
+3) Sachse, A., Liao, Z., Hu, W., Dai, X., Kolditz, O. (2019) Chinese Water Systems, Volume 2: Managing Water Resources for Urban Catchments: Chaohu. Springer International Publishing. doi:10.1007/978-3-319-97568-9
+
+------------------------------------------
+
+## OGS DE visualization examples
+
+![*Figure: Hydrogeological model of the Western Dead Sea Catchment (Lars Bilke, Agnes Sachse (SUMAR, IWAS Middle East))*](../WDS.png){ width=40% }
+
+![*Figure: Hydrogeological model of the Ammer Catchment (Karsten Rink)*](../Ammer.png){ width=40% }
+
+------------------------------------------
+
+## Vislab
+The Visualization Center *(Vislab)* at the Department of Environmental Informatics (Helmholtz Centre of Environmental Research, Leipzig, Germany) offers scientists of various disciplines the opportunity to explore and analyze complex and heterogeneous spatial data sets. An interactive large-screen stereo projection screen is used, which makes it possible to immerse in the environmental data presented and to gain new insights into scientific issues and problems. The visualization center continues to offer itself for the transfer of knowledge in the research environment as well as for knowledge communication especially to interested citizens.
+
+![*Figure: TESSIN Vislab (Carolin Helbig)*](../Tessin_Vislab.png){ width=45% }
+![*Figure: Scientific Discussion in the Vislab*](../IMG_6048.jpg){ width=45% }
+
+Reference:
+
+1) Bilke, L., Fischer, T., Helbig, C., Krawczyk, C., Nagel, T., Naumov, D., ... & Walther, M. (2014). TESSIN VISLab—laboratory for scientific visualization. Environmental Earth Sciences, 72(10), 3881-3899.
+
+------------------------------------------
+
+## Projects
+
+------------------------------------------
+
+### Hydro- and Hydrogeological Case Studies
+
+----
+
+#### Oman: Sea / Salt Water Intrusion
+
+The study deals with the numerical modeling of density-dependent flow of saltwater intrusion in coastal groundwater systems. 
+
+Saltwater intrusion; Density-dependent; Three-dimensional numerical simulation; OpenGeoSys; Al-Batinah; IWAS-Oman
+
+
+![*Figure: Heterogeneous flow field in groundwater model domain, natural saltwater intrusion for steady state conditions, with ten times vertical exaggeration (M. Walther et al., 2012)*](../saltwater_intrusion.png){ width=45% }
+
+Video: Visualization of saline intrusion and flow regime through streamtracers in a Coastal Aquifer System (Oman) (Source: M. Walther, L. Bilke et al.)
+
+{{< youtube -xBQJ9WWPJY >}}
+
+
+References:
+
+1) M. Walther, J.-O. Delfs, J. Grundmann, O. Kolditz, R. Liedl. Saltwater intrusion modeling: Verification and application to an agricultural coastal arid region in Oman, Journal of Computational and Applied Mathematics, Volume 236, Issue 18, 2012, Pages 4798-4809, ISSN 0377-0427,
+https://doi.org/10.1016/j.cam.2012.02.008.
+
+2) M. Walther, L. Bilke, J.-O. Delfs, Th. Graf, J. Grundmann, O.Kolditz, R. Liedl. Assessing the saltwater remediation potential of a three-dimensional, heterogeneous, coastal aquifer system, Environmental Earth Sciences, Volume 72, Number 10, 2014, Pages 3827-3837,ISSN 1866-6299,
+doi="10.1007/s12665-014-3253-2.
+
+------------------------------------------
+
+#### Western Dead Sea Catchment
+The groundwater resources of Israel are strongly limited by the semi-arid to arid climatic conditions. Hence, it is important to understand the water balances in these region. The study deals with the investigation of the water budget of the western Dead Sea Escarpment. Therefore a hydrological and a groundwater flow model was combined to quantify the potential amounts of surface- and groundwater inflow from the western catchment into the Dead Sea basin. The study area is limited by the sub-surface catchments and has a size of ~4000 km².
+
+Hydro- and hydro-geological modelling of the Western Dead Sea Catchment. In the project, both the groundwater resources were balanced and the groundwater recharge expected in the surface catchment area was calculated.
+
+![*Video: GW-Model Set Up of the Western Dead Sea Catchment (Agnes Sachse / Lars Bilke)*]
+
+{{< youtube ICZh-Bs2nVg >}}
+
+
+References:
+
+1) Sachse, A., Fischer, C., Laronne, J. B., Hennig, H., Marei, A., Kolditz, O., & Rödiger, T. (2017). Water balance estimation under the challenge of data scarcity in a hyperarid to Mediterranean region. Hydrological processes, 31(13), 2395-2411.
+
+2) Siebert, C., Rödiger, T., Mallast, U., Gräbe, A., Guttman, J., Laronne, J. B., ... & Vachtman, D. (2014). Challenges to estimate surface-and groundwater flow in arid regions: The Dead Sea catchment. Science of the Total Environment, 485, 828-841.
+
+------------------------------------------
+
+#### TERENO: Selke Catchment
+
+Intense numerical modelling efforts have been conducted using OpenGeoSys to investigate subsurface processes at various spatial-temporal scales in the Selke River Basin. The Selke River Basin is a part of the Bode River Basin, which was selected as the hydrological observatory and main region for hydro-ecological research within the TERrestrial ENvironmental Observatories (TERENO) Harz/Central German Lowland Observatory (Wollschläger et al, 2017). In general, a cascade modelling approach was chosen to address relevant processes at each scale with tailor-made modelling approaches. Subsequently, two- and three-dimensional numerical groundwater flow and transport models were set-up at meander, hillslope, subbasin and basin scale and were linked with each other by boundary conditions. 
+
+![*Figure: Cascade modelling approach to address relevant processes at each scale.*](../Selke_MW.png){ width=44% }
+![*Figure: Three-dimensional geological model of the Lower Selke Basin. The contour lines visualize the hydraulic head in the aquifer system of the sub-basin obtained by simulations using the OpenGeoSys groundwater flow model*](../Selke_geologicalmodel.png){ width=54% }
+
+Modelling activities at the Selke Basin were closely connected to measurement activities. For instance, a calibrated transient numerical groundwater flow model of the riparian zone at the Selke intensive research site was applied to evaluate the reliability of riparian travel time measurements (Nixdorf & Trauth 2018). 
+
+In another subproject, a two-dimensional cross-sectional groundwater flow model was used to test whether the upwelling of deep groundwater, as proposed by differential gauging and radon tracer analysis, influences downstream surface water quantity and quality significantly (Liu et al, 2018)
+
+![*Figure: Conceptual model of the upwelling of deep groundwater*](../Liu_conceptualmodel.png){ width=52% }
+![*Figure: Groundwater flow model of the upwelling of deep groundwater*](../Liu_modelresults.png){ width=47% }
+
+
+References: 
+
+1) Wollschläger, U., Attinger, S., Borchardt, D., Brauns, M., Cuntz, M., Dietrich, P., ... & Hildebrandt, A. (2017). The Bode hydrological observatory: a platform for integrated, interdisciplinary hydro-ecological research within the TERENO Harz/Central German Lowland Observatory. Environmental Earth Sciences, 76(1), 29.
+
+2) Nixdorf E, Trauth N. (2018). Evaluating the reliability of time series analysis to estimate variable riparian travel times by numerical groundwater modelling. Hydrological Processes. 2018;32:408–420. https://doi.org/10.1002/hyp.11428
+
+2) Nixdorf, E., Trauth, N., Kalbacher, T., Fleckenstein, J. H., & Kolditz, O. (2018). Modelling the impact of water management in former lignite pits on groundwater regime and catchment boundaries in the Central German Lowlands. In EGU General Assembly Conference Abstracts (Vol. 20, p. 19478).
+
+3) Dongsheng Liu, Jian Zhao, Woo-Hyun Jeon, Jin-Yong Lee, Erik Nixdorf, Thomas Kalbacher, Holger Weiß (2018). Study on hyporheic exchange and solute transport across river bed-to-bank continuum under transient hydrological conditions. In EGU General Assembly Conference Abstracts (Vol. 20, EGU2018-3524-8).
+
+Contact: 
+
+Dr. Erik Nixdorf (erik.nixdorf@ufz.de)
+
+Dr. Thomas Kalbacher (thomas.kalbacher@ufz.de)
+
+
+------------------------------------------------------------
+
+### Chinese Water Systems 
+
+-----
+
+#### Modelling subsurface contaminant transport in Songliao Basin (Sustain H2O)
+
+The [SUSTAIN H2O](https://www.ceh.ac.uk/our-science/projects/sustainh2o) project, supported by the European Commission under the EU-China Environmental Sustainability Programme, developed and demonstrated management tools and practices for pollution reduction and water quality improvement in the Songliao River Basin (SLRB) to achieve the water pollution control targets designated in the “12th Five-Year Plan” of China. The SUSTAIN H2O project was led by the Chinese Research Academy of Environmental Sciences (CRAES), with international partners being the Helmholtz Centre for Environmental Research (UFZ) in Germany and the NERC Centre for Ecology & Hydrology (CEH) in UK.
+
+One key task of the project was to investigate the groundwater regime and subsurface pollutant transport in the demonstration area Ashi City. The water supply of the city relies solely on groundwater abstracted from wellfields close to agricultural and urban areas. Based on data supplied by the local environmental protection agency, a transient three-dimensional numerical groundwater flow model was set up using OpenGeoSys Version 5.7. The impact of future water demand on water supply security was assessed by simulating the time-variant flow and transport processes with focus on the spreading of pollutants from industrial sources and the influx of nitrate from agricultural activities into the soils of the farmlands.
+
+
+![*Figure: Study area in Ashi Basin (Erik Nixdorf)*](../AshiBasin_ENixdorf.png){ width=25% }
+![*Figure: FEM discretization of the subsurface hydrogeology of study area (Erik Nixdorf)*](../hydrogeologicalmodell_ENixdorf.png){ width=22% }
+![*Figure: Groundwater flow field under current conditions (Erik Nixdorf)*](../groundwaterflow_ENixdorf.png){ width=26% }
+![*Figure: Spreading of pollutants after 20 years of simulation assuming a scenario with an continuously increasing pumping rate (Erik Nixdorf)*](../pollutants_ENixdorf.png){ width=21% }
+
+
+References:
+
+1) Nixdorf, E, Sun Y, Su J, Wang Q, Wang T, Kolditz O,  Xi B. 2018. Groundwater Risk Sources Identification and Risk Reduction Management in the Song-Liao-River-Basin. In: Chinese Water Systems: Volume 1: Liaohe and Songhuajiang River Basins. Springer. S. 349-398.
+
+2) Mao L, Danfeng J, Chifei C, Sun Y, Su J, Xi B, Nixdorf E. 2016. Groundwater Vulnerability Partition in Ashi River Basin. Research of Environmental Sciences 29 (12): 1773–1781
+
+3) Sachse A, Nixdorf E, Jang E, Rink K, Fischer T, Xi B,  et al. 2017. OpenGeoSys-Tutorial: Computational Hydrology II: Groundwater Quality Modeling. Springer.
+
+
+Contact: 
+
+Dr. Erik Nixdorf (erik.nixdorf@ufz.de)
+
+-----
+
+#### Chaohu
+The "Urban Catchments"-project is part of the German project cluster within the German-Chinese cooperation for the "Mega-Water Program" in China and focuses on the development of sanitary and environmental technology system solutions for the sustainable improvement of water quality in the city of Chaohu, China.
+
+The Urban Catchment project includes the adaption and adjustment of software frameworks for the region around the Chao Lake. A WebGIS approach was established for time-series data from observation sites in Chaohu City to monitor water quality and hydrological parameters. And a virtual geographic environment was set up to present all available data sets for the Chao Lake catchment in one unified geografic context, such that the relevance and information for each data set are adequately visualized and the interaction with other data sets is coherently illustrated.
+
+![*Figure: Urban Catchment Environmental Information System with comprehensive measuring systems (Karsten Rink)*](../Chaohu_EIS.png){ width=22% }
+![*Figure: Urban Catchment Environmental Information System (Karsten Rink)*](../042_Chaohu_CRAES.JPG){ width=20% }
+![*Figure: Chaohu Catchment (Karsten Rink)*](../Chaohu_EIS_map.png){ width=25% }
+![*Figure: Rink K, Chen C, Bilke L, Liao Z, Rinke K, Frassl M, Yue T, Kolditz O (2016): Virtual Geographic Environments for Water Pollution Control. International Journal of Digital Earth. DOI: 10.1080/17538947.2016.1265016 (Karsten Rink)*](../Chaohu_JournalPaper_Rink2016.png){ width=27% }
+
+In the project, a groundwater model was also created, which complete the hydraulic system which so far was limited to the urban and suburban regions around Chao Lake and the lake itself. The three-dimensional model made it possible to factor in the vertical movement of groundwater and also the vertical movement of mass transport components, e.g. the transport of the algae toxin Microcystin in the subsurface and in the groundwater.
+
+![*Figure: Groundwater flow model of the Chaohu Lake catchment (Martin Pohl, Marc Walther)*](../GWmodelChaoLake.png){ width=40% }
+![*Figure: Groundwater exfiltrating into Chao Lake at 120 days (left). Water from Chao Lake infiltrating into groundwater at 60 days (right). (Martin Pohl, Marc Walther)*](../WPE_transient_lake_glyph.png){ width=40% }
+
+**FILM (mit Ton) VERFÜGBAR! (Gruppenlaufwerk envinf presentations movies)**
+
+References:
+
+1)  Sachse, A., Liao, Z., Hu, W., Dai, X., Kolditz, O. (2019) Chinese Water Systems, Volume 2: Managing Water Resources for Urban Catchments: Chaohu. Springer International Publishing. doi:10.1007/978-3-319-97568-9
+
+-----
+
+#### A simulation platform for environmental system dynamics in Poyang Lake Basin, China (DFG-NSFC-Cooperation Group)
+
+The DFG-NSFC-Cooperation Group was formed in 2015 with the aim to develop a simulation platform for Big Data applications based on giving solutions of the theoretical and technical problems to explore interactive mechanisms of land-use change and water-resource change under climate change and rapidly increasing human activities. For this purpose, a model-oriented approach has been developed taking the chinese Poyang Lake Basin as a case study.
+In order to investigating the seasonal water-resource changes in the Poyang Lake wetland system, the numerical code OpenGeoSys was applied to set up a planar two-dimensional numerical model to simulate the groundwater regime in the Poyang Lake Core Region during flood and dry season.  Temporally variable water surface areas obtained from Landsat satellite images and information on surface water levels were embedded into the groundwater simulation framework. The numerical model was successfully used to determine seasonal groundwater levels and flow velocities around the lake, to quantify the seasonal exchange volume flux between the lake and the wetlands and to identify travel times and end-members by applying numerical stream tracer approaches. The work was done in close cooperation with the Nanjing Institute of Geography and Limnology (NIGLAS).
+
+
+![*Figure: Simulated groundwater regime in the Poyang Lake Core Region. The hydraulic head distribution is visualized as colored surface of the FEM mesh during high (a) and low (b) water levels in Poyang Lake. Groundwater velocities are visualized as glyph vectors colored by the magnitude of the velocity vector and the white polylines show the shoreline of Poyang Lake and the floodplain lakes. The two subplots show histograms of nodal hydraulic head (c) and flow velocity (d) distribution in the Poyang Core Region during high and low water level. The median values of the distribution ± the interquartile range is given within the plots (from Nixdorf, 2018).*](../PoyangLake_ENixdorf2018_quer.png){ width=100% }
+
+
+Karsten Rink: A modelling platform prototype was set-up with Unity/OGSDataExplorer to integrate the models for water-resource change, land-cover change and driving forces of the changes, to simulate the interactive mechanisms taking Poyang Lake Basin as an example, and to realize dynamic visualization of the land-cover and water-resource change as well as their interactions.
+
+Figure by Karsten!
+
+
+References:
+
+1) Nixdorf, E. (2018). Modelling seasonal groundwater flow dynamics in the Poyang Lake Core Region. In Chinese Water Systems Volume 3: Poyang Lake Basin. 978-3-319-97724-9 (pp. 67-88). Springer, Cham.
+
+2) Yue, T., Nixdorf, E., Zhou, C., Xu, B., Zhao, N., Fan, Z., ... & Kolditz, O. Chinese Water Systems, Volume 3: Poyang Lake Basin, Springer International Publishing.
+
+
+Contact:
+
+Dr. Karsten Rink (karsten.rink@ufz.de)
+
+Dr. Erik Nixdorf (erik.nixdorf@ufz.de)
+
+
+------------------------------------------
+
+### Georeservoirs (shallow geothermal, deep geothermal, (very) deep geothermal, energy storage, waste management)
+
+----
+
+#### Geothermal reservoir: Castel Giorgio-Torre Alfina 
+The Castel Giorgio-Torre Alfina (CG-TA, central Italy) is a geothermal reservoir whose fluids are hosted in a carbonate formation at temperatures ranging between 120&deg;C and 210&deg;C. Data from deep wells suggest the existence of convective flow. A 3D numerical model of the CG-TA simulates the undisturbed natural geothermal field and the impacts of the exploitation
+process were investigated. The open source finite-element code OpenGeoSys was applied to solve the coupled systems of partial differential equations.The commercial software FEFLOW was also used as additional numerical constraint. Both, OGS and FELFOW results are qualitatively very similar with differences in peak velocities and temperatures.
+
+![*Figure: A three-dimensional thermohydraulic model was built to investigate the different processes involved in the Castel Giorgio-Torre Alfina geothermal reservoir (Volpi et al. 2018)*](../Volpi_etal_2017_modelgeometry.png){ width=45% }
+![*Figure: Temperature field resulting from the transient natural state simulation.The three wells (RAI01, Alfina015, and Alfina002), for which the available temperature logs were used to identify the reservoir present-day thermal state, are shown. Best-fitting time step (125,000 years simulation times) resulting in a good match between simulated and real thermometric data for the 3 evaluated wells (Volpi et al. 2018)*](../Volpi_etal_2017_modelgeometry_OGSresults.jpg){ width=45% }
+
+Similar research questions were also analyzed and modeled in the TBMOD-project (Magri et al., 2016, 2017): 3D coupled thermal-hydraulic model of the Lower Yarmouk Gorge (LYG), a finite element modeling of coupled TH processes applying OpenGeoSys and FEFLOW.
+
+![*Figure: Calculated temperature (°C): Local temperature increases occur at the lake shore and at the Lower Yarmouk Gorge. (Magri et al. 2017)*](../Magri_2017_LYG_OGSresults.jpg){ width=25% }
+![*Figure: Model surface (565 km²) discretized into 127k triangular finite elements.The 3D mesh consists of 3.3M elements. Faults are 40-80 m wide EPM and observation points (wells) are used to calibrate the hydraulic conductivity. (Magri et al. 2017)*](../Magri_2017_LYG_modelsurface.jpg){ width=45% }
+
+References:
+
+1) Volpi, G., Magri, F., Colucci, F., Fisher, T., De Caro, M., & Crosta, G. B. (2018). Modeling highly buoyant flows in the Castel Giorgio: Torre Alfina deep geothermal reservoir. Geofluids, 2018.
+
+2) Magri, F., Möller, S., Inbar, N., Möller, P., Raggad, M., Rödiger, T., ... & Siebert, C. (2016). 2D and 3D coexisting modes of thermal convection in fractured hydrothermal systems-Implications for transboundary flow in the Lower Yarmouk Gorge. Marine and Petroleum Geology, 78, 750-758.
+
+3) Magri, F., Walther, M., Volpi, G., Inbar, N., Möller, P., Raggad, M., Rödiger, T., Rosenthal, E., Shentsis, I., Siebert, C. (2017), 3D coupled thermal-hydraulic model of the Lower Yarmouk Gorge (LYG), Abstract H43H-1761 presented at 2017 Fall Meeting, AGU, San Francisco, Calif., 14 Dec.
+
+4) Walther, M.; Magri, F.; Inbar, N.; Möller, P.; Raggad, M.; Rödiger,
+T.; Rosenthal, E.; Shentsis, I.; Siebert, C.; Volpi, G. (2017). 3D Coupled Thermal-Hydraulic Model of the Lower Yarmouk Gorge, Jordan Rift Valley. American Geophysical Union, Fall Meeting 2017, abstract #H43H-1761.
+
+------------------------------------------
+
+#### ESM: Advanced Earth System Model Capacity
+The project Advanced Earth System Model Capacity (ESM) started on the 1 April 2017 and is co-funded by the Helmholtz Association over a period of three years. The overall objective of the project is to develop, evaluate and apply a world-leading Earth system modelling infrastructure to provide solutions to grand challenges faced by the Earth and environmental sciences, and societies. The presented work is strongly related to the WP Frontier Simulations and its tasks Georeservoirs and Data & HPC management.
+
+A 3D benchmark test was set up for the simulation of thermal convection in a faulted system that accounts for temperature dependent fluid viscosity.
+OGS-6 results are compared to those obtained using the commercial software FEFLOW (Diersch 2014) to test the ability of the open source code in matching both the critical Rayleigh number at which convection occurs and the dynamical features of convective processes. OGS-6 successfully simulates the onset of thermal convection at critical Rayleigh numbers. OGS results are consistent with those obtained with FEFLOW and GOLEm.
+
+![*Figure: Modeled faulted system displaying the finite element mesh (with refined mesh along the fault) and temperature boundary conditions. (Fabien Magri, Thomas Fischer et al.)*](../BMB5_ebook_2018_Benchmark_Fault_Fischer.jpg){ width=15% }
+![*Figure: OGS-6 results for the final time at the fault plane. (Fabien Magri, Thomas Fischer et al.)*](../BMB5_ebook_2018_Benchmark_Fault_Fischer_OGSresults.jpg){ width=30% }
+
+References:
+
+1) Kolditz, O., Nagel, T., Shao, H., Wang, W., & Bauer, S. (Eds.). (2018). Thermo-Hydro-Mechanical-Chemical Processes in Fractured Porous Media: Modelling and Benchmarking: From Benchmarking to Tutoring. Springer.
+
+------------------------------------------
+
+#### Angus+
+
+ANGUS+: Effects of using the geological subsoil as thermal, electrical or material storage in the context of the energy transition - dimensioning, risk analyzes and impact forecasts as bases for a future spatial planning of the subsoil
+
+For the underground energy storage options, virtual, realistic site scenarios are developed and numerically modeled. At the same time, the effects of energy storage processes on existing protected goods can be predicted. Here, the storage of gases in salt caverns and porous rock layers of the deep geological subsurface is considered, as well as the storage of heat in near-surface and deep rock layers. Appropriate methods for monitoring the ongoing processes and for monitoring environmental impacts can then be derived from simulations.
+As a continuation of the ANGUS + project, the ANGUS II-project has been approved. It deals with the "Integration of Underground Storage Technologies into the Energy System Transformation Using the Example of the Schleswig-Holstein Model Area".
+
+![*Figure: Visualization of ANGUS+-Project (Norbert Grunwald)*](../ANGUS_MG_5367.jpg){ width=30% }
+![*Figure: Visualization of ANGUS+-Project (Norbert Grunwald)*](../ANGUS_Screenshot_1.jpg){ width=30% } 
+![*Figure: Visualization of ANGUS+-Project (Norbert Grunwald)*](../ANGUS_crop_008.png){ width=30% }
+
+**FILM VERFÜGBAR! (Gruppenlaufwerk envinf presentations movies)**
+
+
+References:
+
+1) Böttcher, N., Görke, U. J., Kolditz, O., & Nagel, T. (2017). Thermo-mechanical investigation of salt caverns for short-term hydrogen storage. Environmental Earth Sciences, 76(3), 98.
+
+2) Kabuth, A., Dahmke, A., Beyer, C., Bilke, L., Dethlefsen, F., Dietrich, P., ... & Köber, R. (2017). Energy storage in the geological subsurface: dimensioning, risk analysis and spatial planning: the ANGUS+ project. Environmental Earth Sciences, 76(1), 23.
+
+
+------------------------------------------
+
+#### ANGUS+: Borehole Heat Exchanger (Haibing Shao, Sophie Schelenz)
+
+To exchange heat with the surrounding soil and rock, borehole heat exchangers are installed in the subsurface.
+
+This study quantifies the advantages of a site-specific over a desktop-based site characterization in reducing uncertainty for calculation of borehole heat exchanger length and predicted induced temperature changes in the subsurface for a newly developed residential neighborhood in the city of Taucha, Germany. The simulation was set up and performed in order to predict the longterm performance of the BHE system over a period of 30 years in an one-family house with its typical heating demand.
+
+![*Figure: Borehole Heat Exchanger (BHE) (Haibing Shao et al.)*](../BHE_Haibing.png){ width=30% }
+![*Figure: Model concept of BHE (Haibing Shao et al.)*](../BHE_modelconcept.png){ width=30% }
+![*Figure: Soil temperature distribution after 30 years of operation of a BHE (Haibing Shao et al. 2016)*](../Shao_etal_2016_soilTemp_BHE.jpg){ width=30% }
+
+References: 
+
+1) Schelenz, S., Vienken, T., Shao, H., Firmbach, L., & Dietrich, P. (2017). On the importance of a coordinated site characterization for the sustainable intensive thermal use of the shallow subsurface in urban areas: a case study. Environmental Earth Sciences, 76(2), 73.
+
+------------------------------------------
+
+#### Enhanced geothermal reservoirs: Großschönebeck
+
+Analysis of Enhanced Geothermal Systems (EGS) in the North German Basin: Großschönebeck
+
+![*Figure: Großschönebeck (Karsten Rink)*](../GrSchoenebeckWhite.png){ width=45% }
+
+
+**FILM VERFÜGBAR! (Gruppenlaufwerk envinf presentations movies)**
+
+------------------------------------------
+
+#### Ground Source Heat Pump
+
+The most widely applied technology to utilize energy from the shallow subsurface is the so-called Ground Source Heat Pump (GSHP) system. Such system is typically composed of three inter-connected parts, namely (1) the ground loop, (2) the heat pump, and (3) the in-door loop.
+The function of the heat pump, is to elevate the low-grade heat from the ground loop, to high-grade heat that can directly be applied for room heating or hot water supply.
+
+Boyan Meng: Modeling the local temperature response to intensive operation of ground source heat pump systems: A case study in Germany
+In a suburban residential neighborhood of Cologne, Germany, Ground Source Heat Pump (GSHP) systems have been heavily applied for the heating / cooling of houses. What is the short-term effect of shallow geothermal systems used for household heating on the local groundwater? The short-term temperature change in general agreed well with the measurements. It seems that the thermal load curve needs to be “compressed” a bit.
+
+![*Figure: A gradual development of cold plumes can be observed downstream of the GSHP systems (Boyan Meng)*](../BMeng_CaseStudy.png){ width=45% }
+
+References: 
+
+1) Boyan Meng, Thomas Vienken, Olaf Kolditz, Haibing Shao (2018). Impact of Ground Source Heat Pump (GSHP) usage on the long-term groundwater temperature changes: A case study in residential area. In EGU General Assembly Conference Abstracts (Vol. 20, EGU2018-5227).
+
+------------------------------------------
+
+
+#### Energy storage: Thermochemical Energy Storage (TCES) Systems
+
+Heat is stored using a reversible chemical reaction that is exothermal in one direction (when discharging the storage), and endothermal in the other direction (charging).
+
+In the context of thermochemical energy storage (TCES) visualization is an important tool that helps gaining deeper insights into the physical processes involved. In particular it allows to track the movement and steepness of reaction fronts. Furthermore, it facilitates understanding the complex interplay between the temperature and humidity fields and the local charging state of the TCES'es reactive bed, that leads to specific reaction rates. This interplay subsequently leads to the observed reaction rates, which gives rise to application-relevant quantities such as the thermal power of the device, the energy storage density and the degree of utilization of the storage material's capacity that can be achieved for given working conditions.
+Visualization is also valuable for assessing the accuracy of numerical model calibrations, e.g., by comparison with experimentally obtained time series data and the physical soundness of simulation results in general: peculiarly shaped curves immediately leap to the eye.
+
+![*Figure: Four panels (1500s) (Christoph Lehmann et al.)*](../four-panels-1500s.png){ width=30% }
+
+![*Figure: Four panels (2800s) (Christoph Lehmann et al.)*](../four-panels-2800s.png){ width=30% }
+
+![*Figure: Velocity profile (Christoph Lehmann et al.)*](../velocity-profile.png){ width=30% }
+
+Video: Thermochemical Energy Storage Systems (Christoph Lehmann et al.)
+
+{{< youtube W_IVa33uhcI >}}
+
+**weiterer FILM VERFÜGBAR (mit Ton)! (Gruppenlaufwerk envinf presentations movies)**
+
+References: 
+
+1) Lehmann, C., Kolditz, O., & Nagel, T. (2018). Models of Thermochemical Heat Storage. Springer International Publishing.
+
+2) Nagel, T., Beckert, S., Lehmann, C., Gläser, R., & Kolditz, O. (2016). Multi-physical continuum models of thermochemical heat storage and transformation in porous media and powder beds—A review. Applied Energy, 178, 323-345.
+
+------------------------------------------
+
+#### IGLU
+
+The IGLU project aims at the developing an environmentally neutral and economical solar collector supplied energy storage system featuring a modular design for integration into heating systems of domestic or industrial buildings. For this purpose, a numerical thermo-hydromechanical modeling tool for the simulation-based design of the IGLU energy storage system is being developed.
+This research is also part of the OpenGeoSys initiative.
+
+![*Figure: Propagation of damage in the near field of heat exchangers due to different thermal expansion coefficients of the materials involved, modeled with OGS. (Xing-Yuan Miao, Thomas Nagel)*](../IGLU_crack.gif){ width=30% }
+![*Figure: Heat storage test module during heating, which induces fluid movement and deformation in addition to the increase in temperature, modeled with OGS. (Xing-Yuan Miao, Thomas Nagel)*](../IGLU_thm_hs.gif){ width=30% }
+
+References:
+
+1) http://www.ufz.de/index.php?en=37526
+
+2) Doktorarbeit von Xin
+
+3) Miao, X. Y., Zheng, T., Görke, U. J., Kolditz, O., & Nagel, T. (2017). Thermo-mechanical analysis of heat exchanger design for thermal energy storage systems. Applied Thermal Engineering, 114, 1082-1089.
+
+------------------------------------------
+
+#### Thermochemical energy storage devices
+
+The performance of the present parallelisation approach is tested by simulating the discharge of a heat store based on calcium oxide and water as a benchmark problem.
+
+![*Figure: Benchmark (WW et al.)*](../ThermochemicalEnergyStorage_WW_2017.jpg){ width=30% }
+
+References:
+
+1) Wenqing Wang, Olaf Kolditz, Thomas Nagel, Parallel finite element modelling of coupled multiphysical processes in thermochemical energy storage devices, Applied Energy, 2016 (http://dx.doi.org/10.1016/j.apenergy.2016.03.053)
+
+------------------------------------------
+
+#### CO2 storage / Ketzin research area: 
+
+WW et al.?
+
+
+
+------------------------------------
+
+### DECOVALEX 2019 - Mont Terri: THM-coupled problems in geotechnics
+Within the Mont Terri CD-A-project (Torben Brüning, Wenqing Wang, Haibing Shao, Hua Shao) the hydraulic-mechanically coupled behavior of the Opalinus clay is analysed. One focus point is the development of the desaturated zone around excavations. Numerical analyzes support the design of the measuring program.
+The Fault Slip-Experiment (Task B: Jobst Maßmann, Gesa Ziefle, Dmitri Naumov, Thomas Nagel) explores couplings between fault reactivation and enhanced fluid flow through a previously low-permeability formation.
+
+![*Figure: CD-A Experiment: Preliminary modeling –desaturation (Ziefle et al.)*](../MontTerri.jpg){ width=15% }
+![*Figure: CD-A Experiment: Desaturation after 15 years (Ziefle et al.)*](../CD-A_Ziefle_desaturation.jpg){ width=15% }
+![*Figure: (Task B) Fault-Slip Experiment of Mont Terri (Thomas Nagel et al.)*](../MontTerri_Guglielmi2016.png){ width=15% }
+![*Figure: (Task B) 3 D model of the Fault-Slip Experiment of Mont Terri (Thomas Nagel et al.)*](../MontTerri_model.png){ width=15% }
+![*Figure: (Task B) Result of the 3 D model of the Fault-Slip Experiment of Mont Terri (Thomas Nagel et al.)*](../MontTerri_model_result.png){ width=15% }
+
+
+------------------------------------------------------
+
+### Reactive Multi-Component Transport: Case Study: Hessian Ried
+
+OpenGeoSys and PHREEQC are coupled to simulate reactive multi-component transport in heterogeneous porous aquifer. The mass transport part is simulated by OpenGeoSys in each time step, and a geochemical solver is then applied to handle the local chemical reactions. 
+
+The Hessian Ried, one of the important groundwater reservoirs for the densely populated Rhine-Main region, Germany is the research area for reactive multi-component transport simulations. For decades,N-based fertilizers have been used in this region in order to increase the productivity of the soils. 
+
+![*Figure: Case Study: Hessian Ried (Eunseon Jang)*](../RTM_Eunseon_HessianRied.png){ width=30% }
+![*Figure: Two-dimensional domain used in the simulations (scale in meter) and schematic representation of the nitrate reduction pathway. (Eunseon Jang)*](../RTM_Eunseon_conceptualmodel.png){ width=30% }
+![*Figure: Hydraulic conductivity (K) distribution and initial pyrite (P) concentration in heterogeneous media with the same correlation length and arithmetic mean 1.55E-4 m s−1 and 0.0035 mol kg−1, respectively. (Simulations 2 and 6, both cases, σ2 = 0.03). (Eunseon Jang)*](../RTM_Eunseon_results1.jpg){ width=30% }
+
+References: 
+
+1) E. Jang, W. He, H. Savoy, P. Dietrich, O. Kolditz, Y. Rubin, C. Schüth, T. Kalbacher,
+Identifying the influential aquifer heterogeneity factor on nitrate reduction processes by numerical simulation, Advances in Water Resources, Volume 99, 2017, Pages 38-52, ISSN 0309-1708,
+https://doi.org/10.1016/j.advwatres.2016.11.007.
+
+2) He, W., Beyer, C., Fleckenstein, J. H., Jang, E., Kolditz, O., Naumov, D., and Kalbacher, T.: A parallelization scheme to simulate reactive transport in the subsurface environment with OGS#IPhreeqc 5.5.7-3.1.2, Geosci. Model Dev., 8, 3333-3348, https://doi.org/10.5194/gmd-8-3333-2015, 2015. 
+
+--------------------------------------------------------
+
