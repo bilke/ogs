@@ -98,6 +98,10 @@ pipeline {
               build { target="tests" }
               build { target="ctest" }
               build { target="doc" }
+              build {
+                log="cppcheck.log"
+                target="cppcheck"
+              }
             }
           }
           post {
@@ -117,6 +121,7 @@ pipeline {
                 ],
                 tools: [doxygen(pattern: 'build/DoxygenWarnings.log')],
                 failedTotalAll: 1
+              recordIssues tools: [cppCheck(pattern: 'build/cppcheck.log')]
             }
             success {
               publishHTML(target: [allowMissing: false, alwaysLinkToLastBuild: true,
