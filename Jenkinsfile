@@ -78,7 +78,7 @@ pipeline {
               filename 'Dockerfile.gcc.full'
               dir 'scripts/docker'
               label 'docker'
-              args '-v /home/jenkins/cache:/home/jenkins/cache'
+              args '-v /home/jenkins/cache:/home/jenkins/cache -v /home/jenkins/cache/conan/.conan:/home/jenkins/.conan'
               additionalBuildArgs '--pull'
             }
           }
