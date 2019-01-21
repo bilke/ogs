@@ -19,6 +19,8 @@ endif()
 find_program(GPROF_PATH gprof DOC "GNU profiler gprof" QUIET)
 
 find_program(CPPCHECK_TOOL_PATH cppcheck)
+find_program(CPPDEPENDENCIES_TOOL_PATH cpp-dependencies)
+find_program(DOT_TOOL_PATH dot)
 
 find_package(PythonInterp QUIET)
 

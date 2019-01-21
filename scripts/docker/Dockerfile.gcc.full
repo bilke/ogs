@@ -62,15 +62,12 @@ RUN curl -L -o 1.86.tar.gz https://github.com/danmar/cppcheck/archive/1.86.tar.g
   && cd .. && rm -r cppcheck-1.86 1.86.tar.gz
 
 # cpp-dependencies
-
-RUN apt-get update && apt-get install -y libboost-filesystem-dev
-RUN curl -L -o master.zip https://github.com/tomtom-international/cpp-dependencies/archive/master.zip \
-  && unzip master.zip \
+RUN curl -L -o 1.1.tar.gz https://github.com/tomtom-international/cpp-dependencies/archive/1.1.tar.gz \
+  && tar xf 1.1.tar.gz \
   && mkdir build && cd build \
-  && cmake ../cpp-dependencies-master \
+  && cmake ../cpp-dependencies-1.1 \
   && make install \
-  && cd .. && rm -r build cpp-dependencies-master master.zip
-
+  && cd .. && rm -r build cpp-dependencies-1.1 1.1.tar.gz
 
 RUN apt-get install -y mesa-common-dev libgl1-mesa-dev libxt-dev wget
 

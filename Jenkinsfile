@@ -102,6 +102,8 @@ pipeline {
                 log="cppcheck.log"
                 target="cppcheck"
               }
+              build { target="cppdeps" }
+              archiveArtifacts 'build/dependencies.png,build/dependencies.dot'
             }
           }
           post {
