@@ -94,10 +94,7 @@ pipeline {
                   '-DOGS_USE_PYTHON=ON ' +
                   '-DOGS_BUILD_UTILS=ON '
               }
-              build {
-                log="cppcheck.log"
-                target="cppcheck"
-              }
+              build { target="cppcheck" }
             }
           }
           post {
