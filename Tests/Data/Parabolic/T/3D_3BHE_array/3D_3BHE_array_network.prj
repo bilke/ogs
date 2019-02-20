@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <OpenGeoSysProject>
-    <mesh>3bhes.vtu</mesh>
-    <geometry>3bhes.gml</geometry>
+    <mesh>3D_3BHE_array_network.vtu</mesh>
+    <geometry>3D_3BHE_array_network.gml</geometry>
     <python_script>bcs_tespy.py</python_script>
     <processes>
         <process>
@@ -162,12 +162,16 @@
                 <time_stepping>
                     <type>FixedTimeStepping</type>
                     <t_initial> 0.0 </t_initial>
+                    <!-- use the following for full simulation
                     <t_end> 7776000 </t_end>
+                    -->
+                    <t_end> 600 </t_end>
                     <timesteps>
                         <pair>
                             <repeat>10</repeat>
                             <delta_t>60</delta_t>
                         </pair>
+                        <!-- add the following for full simulation
                         <pair>
                             <repeat>5</repeat>
                             <delta_t>600</delta_t>
@@ -180,21 +184,18 @@
                             <repeat>1</repeat>
                             <delta_t>3600</delta_t>
                         </pair>
+                        -->
                     </timesteps>
                 </time_stepping>
             </process>
         </processes>
         <output>
             <type>VTK</type>
-            <prefix>3bhes</prefix>
+            <prefix>3D_3BHE_array_network</prefix>
             <timesteps>
                 <pair>
                     <repeat> 1 </repeat>
-                    <each_steps> 256 </each_steps>
-                </pair>
-                <pair>
-                    <repeat> 1 </repeat>
-                    <each_steps> 240 </each_steps>
+                    <each_steps> 1 </each_steps>
                 </pair>
             </timesteps>
             <variables>
