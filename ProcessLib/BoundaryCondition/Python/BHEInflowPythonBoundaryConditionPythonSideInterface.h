@@ -19,8 +19,8 @@ class BHEInflowPythonBoundaryConditionPythonSideInterface
 public:
     /*!
      * Initialize network dataframe
-     * return a tuple (is_natural, BHE inflow temperature, BHE outflow
-     * temperature, BHE outflow bc node id, time) indicating if a natural BC shall be
+     * return a tuple (BHE inflow temperature, BHE outflow
+     * temperature, BHE outflow bc node id, time)
      * set at that position and the parameters of the BHE network.
      */
     virtual std::tuple<bool,
@@ -28,7 +28,7 @@ public:
                        std::vector<double> /*Tout_val*/,
                        std::vector<int> /*bc_out_ids*/,
                        double /*time*/>
-        initializeDataContainer() const
+    initializeDataContainer() const
     {
         _overridden_essential = false;
         return std::tuple<bool,
@@ -42,9 +42,9 @@ public:
     /*!
      * transfer BHE network dataframe to TESPy and get Tin from TESPy
      *
-     * \return a tuple (is_natural, if convergence, Tin_val from TESPy) indicating if a
-     * natural BC shall be set at that position and the new inflow temperature
-     * of all BHEs
+     * \return a tuple (time, BHE Tin and Tout value from TESPy)
+     * indicating if a natural BC shall be set at that position and the new
+     * inflow temperature of all BHEs
      */
     virtual std::tuple<bool, bool, std::vector<double>> tespyThermalSolver(
         double /*t*/,
@@ -82,7 +82,11 @@ public:
     bool isOverriddenNatural() const { return _overridden_natural; }
 
     // BHE network dataframe container
-    std::tuple<bool, std::vector<double>, std::vector<double>, std::vector<int>, double>
+    std::tuple<bool,
+               std::vector<double>,
+               std::vector<double>,
+               std::vector<int>,
+               double>
         dataframe_network;
 
     virtual ~BHEInflowPythonBoundaryConditionPythonSideInterface() = default;
