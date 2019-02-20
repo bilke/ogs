@@ -51,3 +51,18 @@ AddTest(
     3D_deep_BHE_CXC_pcs_0_ts_10_t_600.000000.vtu 3D_deep_BHE_CXC_pcs_0_ts_10_t_600.000000.vtu temperature_BHE1 temperature_BHE1 0 5e-15
     3D_deep_BHE_CXC_pcs_0_ts_10_t_600.000000.vtu 3D_deep_BHE_CXC_pcs_0_ts_10_t_600.000000.vtu temperature_soil temperature_soil 0 1e-13
 )
+
+AddTest(
+    NAME HeatTransportBHE_3D_3BHE_array_network
+    PATH Parabolic/T/3D_3BHE_array
+    EXECUTABLE ogs
+    EXECUTABLE_ARGS 3D_3BHE_array_network.prj
+    WRAPPER time
+    TESTER vtkdiff
+    REQUIREMENTS OGS_USE_PYTHON
+    DIFF_DATA
+    3D_3BHE_array_network_pcs_0_ts_10_t_600.000000.vtu 3D_3BHE_array_network_pcs_0_ts_10_t_600.000000.vtu temperature_BHE1 temperature_BHE1 0 1e-14
+    3D_3BHE_array_network_pcs_0_ts_10_t_600.000000.vtu 3D_3BHE_array_network_pcs_0_ts_10_t_600.000000.vtu temperature_BHE2 temperature_BHE1 0 1e-14
+    3D_3BHE_array_network_pcs_0_ts_10_t_600.000000.vtu 3D_3BHE_array_network_pcs_0_ts_10_t_600.000000.vtu temperature_BHE3 temperature_BHE1 0 1e-14
+    3D_3BHE_array_network_pcs_0_ts_10_t_600.000000.vtu 3D_3BHE_array_network_pcs_0_ts_10_t_600.000000.vtu temperature_soil temperature_soil 0 1e-13
+)
