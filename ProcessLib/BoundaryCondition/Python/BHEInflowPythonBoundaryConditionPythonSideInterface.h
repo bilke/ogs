@@ -62,7 +62,8 @@ public:
      * natural BC shall be set at that position and the flow velocity in each
      * pipe of all BHEs
      */
-    virtual std::tuple<bool, std::vector<double>> tespyHydroSolver() const
+    virtual std::tuple<bool, std::vector<double>> tespyHydroSolver(
+        double /*t*/) const
     {
         _overridden_natural = false;
         return std::tuple<bool, std::vector<double>>{false, {}};

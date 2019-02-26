@@ -44,12 +44,13 @@ public:
                           tespyThermalSolver, t, Tin_val, Tout_val);
     }
 
-    std::tuple<bool, std::vector<double>> tespyHydroSolver() const override
+    std::tuple<bool, std::vector<double>> tespyHydroSolver(
+        double t) const override
     {
         using Ret = std::tuple<bool, std::vector<double>>;
         PYBIND11_OVERLOAD(Ret,
                           BHEInflowPythonBoundaryConditionPythonSideInterface,
-                          tespyHydroSolver);
+                          tespyHydroSolver, t);
     }
 };
 

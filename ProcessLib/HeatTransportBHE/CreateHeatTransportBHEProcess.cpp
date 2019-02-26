@@ -253,7 +253,7 @@ std::unique_ptr<Process> createHeatTransportBHEProcess(
 
         // here calls the tespyHydroSolver to get the pipe flow velocity in bhe
         // network, and replace the value in flow velocity Matrix _u
-        auto const tespy_flow_rate = std::get<1>(py_object->tespyHydroSolver());
+        auto const tespy_flow_rate = std::get<1>(py_object->tespyHydroSolver(0));
         const std::size_t n_bhe = tespy_flow_rate.size();
         if (bhes.size() != n_bhe)
             OGS_FATAL(
