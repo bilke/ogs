@@ -197,7 +197,7 @@ void HeatTransportBHEProcess::computeSecondaryVariableConcrete(
         _local_assemblers, pv.getActiveElementIDs(), getDOFTable(process_id), t,
         x, _coupled_solutions);
 }
-
+#ifdef OGS_USE_PYTHON
 NumLib::IterationResult HeatTransportBHEProcess::postIterationConcreteProcess(
     GlobalVector const& x)
 {
@@ -224,7 +224,7 @@ NumLib::IterationResult HeatTransportBHEProcess::postIterationConcreteProcess(
         std::get<2>(_process_data.py_bc_object->dataframe_network));
     auto const cur_Tin = std::get<2>(tespy_result);
 
-    //update the T_in
+    // update the T_in
     for (std::size_t i = 0; i < n_bc_nodes; i++)
         std::get<1>(_process_data.py_bc_object->dataframe_network)[i] =
             cur_Tin[i];
@@ -235,6 +235,7 @@ NumLib::IterationResult HeatTransportBHEProcess::postIterationConcreteProcess(
 
     return NumLib::IterationResult::REPEAT_ITERATION;
 }
+#endif  // OGS_USE_PYTHON
 
 void HeatTransportBHEProcess::createBHEBoundaryConditionTopBottom(
     std::vector<std::vector<MeshLib::Node*>> const& all_bhe_nodes)
@@ -281,6 +282,7 @@ void HeatTransportBHEProcess::createBHEBoundaryConditionTopBottom(
                 if (bhe.ifUsePythonBC == true)
                 // call BHEPythonBoundarycondition
                 {
+#ifdef OGS_USE_PYTHON
                     if (_process_data.py_bc_object)  // the bc object exist
                     {
                         // apply the customized top, inflow BC.
@@ -296,6 +298,11 @@ void HeatTransportBHEProcess::createBHEBoundaryConditionTopBottom(
                             "The Python Boundary Condition was switched on, "
                             "but the data object does not exist! ");
                     }
+#else
+                    OGS_FATAL(
+                        "The Python Boundary Condition was switched off! "
+                        "Not able to create Boundary Condtion for BHE! ");
+#endif  // OGS_USE_PYTHON
                 }
                 else
                 {

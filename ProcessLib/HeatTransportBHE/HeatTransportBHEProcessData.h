@@ -30,6 +30,7 @@ namespace HeatTransportBHE
 {
 struct HeatTransportBHEProcessData
 {
+#ifdef OGS_USE_PYTHON
     HeatTransportBHEProcessData(
         Parameter<double> const& thermal_conductivity_solid_,
         Parameter<double> const& thermal_conductivity_fluid_,
@@ -55,6 +56,31 @@ struct HeatTransportBHEProcessData
           _vec_BHE_property(std::move(vec_BHEs_)),
           if_bhe_network_exist_python_bc(if_bhe_network_exist_python_bc_),
           py_bc_object(py_bc_object_)
+#else
+    HeatTransportBHEProcessData(
+        Parameter<double> const& thermal_conductivity_solid_,
+        Parameter<double> const& thermal_conductivity_fluid_,
+        Parameter<double> const& thermal_conductivity_gas_,
+        Parameter<double> const& heat_capacity_solid_,
+        Parameter<double> const& heat_capacity_fluid_,
+        Parameter<double> const& heat_capacity_gas_,
+        Parameter<double> const& density_solid_,
+        Parameter<double> const& density_fluid_,
+        Parameter<double> const& density_gas_,
+        std::vector<BHE::BHETypes>&& vec_BHEs_,
+        bool const& if_bhe_network_exist_python_bc_)
+        : thermal_conductivity_solid(thermal_conductivity_solid_),
+          thermal_conductivity_fluid(thermal_conductivity_fluid_),
+          thermal_conductivity_gas(thermal_conductivity_gas_),
+          heat_capacity_solid(heat_capacity_solid_),
+          heat_capacity_fluid(heat_capacity_fluid_),
+          heat_capacity_gas(heat_capacity_gas_),
+          density_solid(density_solid_),
+          density_fluid(density_fluid_),
+          density_gas(density_gas_),
+          _vec_BHE_property(std::move(vec_BHEs_)),
+          if_bhe_network_exist_python_bc(if_bhe_network_exist_python_bc_)
+#endif  // OGS_USE_PYTHON
     {
     }
 
@@ -91,9 +117,10 @@ struct HeatTransportBHEProcessData
 
     // if bhe network exists python boundary condition
     bool if_bhe_network_exist_python_bc;
-
+#ifdef OGS_USE_PYTHON
     //! Python object computing BC values.
     BHEInflowPythonBoundaryConditionPythonSideInterface* py_bc_object;
+#endif
 };
 }  // namespace HeatTransportBHE
 }  // namespace ProcessLib

@@ -19,8 +19,9 @@
 #include "BHE/CreateBHECoaxial.h"
 #include "HeatTransportBHEProcess.h"
 #include "HeatTransportBHEProcessData.h"
-
+#ifdef OGS_USE_PYTHON
 #include <pybind11/pybind11.h>
+#endif  // OGS_USE_PYTHON
 #include <iostream>
 namespace ProcessLib
 {
@@ -196,13 +197,15 @@ std::unique_ptr<Process> createHeatTransportBHEProcess(
 
         if (bhe_type == "CXA")
         {
-            bhes.push_back(BHE::createBHECoaxial<BHE::BHE_CXA>(bhe_config, curves));
+            bhes.push_back(
+                BHE::createBHECoaxial<BHE::BHE_CXA>(bhe_config, curves));
             continue;
         }
 
         if (bhe_type == "CXC")
         {
-            bhes.push_back(BHE::createBHECoaxial<BHE::BHE_CXC>(bhe_config, curves));
+            bhes.push_back(
+                BHE::createBHECoaxial<BHE::BHE_CXC>(bhe_config, curves));
             continue;
         }
         OGS_FATAL("Unknown BHE type '%s'.", bhe_type.c_str());
@@ -210,18 +213,21 @@ std::unique_ptr<Process> createHeatTransportBHEProcess(
     // end of reading BHE parameters -------------------------------------------
 
     // find if bhe uses python boundary condition
-    auto const isUsingPythonBC =
-        apply_visitor([](auto const& bhe) { return bhe.ifUsePythonBC; },
-                      bhes[0]);
+    auto const isUsingPythonBC = apply_visitor(
+        [](auto const& bhe) { return bhe.ifUsePythonBC; }, bhes[0]);
     if (isUsingPythonBC == true)
     {
         if_bhe_network_exist_python_bc = true;
     }
+
+#ifdef OGS_USE_PYTHON
     //! Python object computing BC values.
-    BHEInflowPythonBoundaryConditionPythonSideInterface* bc = nullptr;
+    BHEInflowPythonBoundaryConditionPythonSideInterface* py_object = nullptr;
+#endif
     // create a pythonBoundaryCondition object
     if (if_bhe_network_exist_python_bc == true)
     {
+#ifdef OGS_USE_PYTHON
         // Evaluate Python code in scope of main module
         pybind11::object scope =
             pybind11::module::import("__main__").attr("__dict__");
@@ -232,22 +238,22 @@ std::unique_ptr<Process> createHeatTransportBHEProcess(
                 "or there "
                 "was no python script file specified.");
 
-        bc = scope["bc_bhe"]
+        py_object = scope["bc_bhe"]
                  .cast<BHEInflowPythonBoundaryConditionPythonSideInterface*>();
 
-        if (bc == nullptr)
+        if (py_object == nullptr)
             OGS_FATAL(
                 "Not able to access the correct bc pointer from python script "
                 "file specified.");
 
         // create BHE network dataframe from Python
-        bc->dataframe_network = bc->initializeDataContainer();
+        py_object->dataframe_network = py_object->initializeDataContainer();
         // clear ogs bc_node_id memory in dataframe
-        std::get<3>(bc->dataframe_network).clear();  // ogs_bc_node_id
+        std::get<3>(py_object->dataframe_network).clear();  // ogs_bc_node_id
 
         // here calls the tespyHydroSolver to get the pipe flow velocity in bhe
         // network, and replace the value in flow velocity Matrix _u
-        auto const tespy_flow_rate = std::get<1>(bc->tespyHydroSolver());
+        auto const tespy_flow_rate = std::get<1>(py_object->tespyHydroSolver());
         const std::size_t n_bhe = tespy_flow_rate.size();
         if (bhes.size() != n_bhe)
             OGS_FATAL(
@@ -263,8 +269,14 @@ std::unique_ptr<Process> createHeatTransportBHEProcess(
             };
             apply_visitor(update_flow_rate, bhes[idx_bhe]);
         }
+#else
+        OGS_FATAL(
+            "Input files suggest the coupling of BHE with pipe network. "
+            "This means the compliling flag OGS_USE_PYTHON must be switched "
+            "on. ");
+#endif  // OGS_USE_PYTHON
     }
-
+#ifdef OGS_USE_PYTHON
     HeatTransportBHEProcessData process_data(thermal_conductivity_solid,
                                              thermal_conductivity_fluid,
                                              thermal_conductivity_gas,
@@ -276,7 +288,20 @@ std::unique_ptr<Process> createHeatTransportBHEProcess(
                                              density_gas,
                                              std::move(bhes),
                                              if_bhe_network_exist_python_bc,
-                                             bc);
+                                             py_object);
+#else
+    HeatTransportBHEProcessData process_data(thermal_conductivity_solid,
+                                             thermal_conductivity_fluid,
+                                             thermal_conductivity_gas,
+                                             heat_capacity_solid,
+                                             heat_capacity_fluid,
+                                             heat_capacity_gas,
+                                             density_solid,
+                                             density_fluid,
+                                             density_gas,
+                                             std::move(bhes),
+                                             if_bhe_network_exist_python_bc);
+#endif
 
     SecondaryVariableCollection secondary_variables;
 
