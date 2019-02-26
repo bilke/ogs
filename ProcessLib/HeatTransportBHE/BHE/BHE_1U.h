@@ -43,7 +43,8 @@ public:
            RefrigerantProperties const& refrigerant,
            GroutParameters const& grout,
            FlowAndTemperatureControl const& flowAndTemperatureControl,
-           PipeConfiguration1U const& pipes);
+           PipeConfiguration1U const& pipes,
+           bool const ifUsePythonBC);
 
     static constexpr int number_of_unknowns = 4;
     static constexpr int number_of_grout_zones = 2;
@@ -147,9 +148,8 @@ public:
                  borehole_geometry.area() / 2 - _pipes.outlet.area()}};
     }
 
-private:
     void updateHeatTransferCoefficients(double const flow_rate);
-
+private:
     std::array<double, number_of_unknowns> calcThermalResistances(
         double const Nu);
 

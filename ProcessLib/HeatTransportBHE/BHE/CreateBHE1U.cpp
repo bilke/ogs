@@ -24,8 +24,19 @@ BHE::BHE_1U createBHE1U(
              std::unique_ptr<MathLib::PiecewiseLinearInterpolation>> const&
         curves)
 {
+    // if the BHE is using python boundary condition
+    bool bhe_if_use_python_bc = false;
+    if (auto const bhe_if_use_python_bc_conf =
+            config.getConfigParameterOptional<bool>(
+                "bhe_if_use_python_bc"))
+    {
+        DBUG("If  using python boundary condition : %s",
+             (*bhe_if_use_python_bc_conf) ? "true" : "false");
+        bhe_if_use_python_bc = *bhe_if_use_python_bc_conf;
+    }
+
+    //! \ogs_file_param{prj__processes__process__HEAT_TRANSPORT_BHE__borehole_heat_exchangers__borehole_heat_exchanger__borehole}
     auto const borehole_geometry =
-        //! \ogs_file_param{prj__processes__process__HEAT_TRANSPORT_BHE__borehole_heat_exchangers__borehole_heat_exchanger__borehole}
         createBoreholeGeometry(config.getConfigSubtree("borehole"));
 
     //! \ogs_file_param{prj__processes__process__HEAT_TRANSPORT_BHE__borehole_heat_exchangers__borehole_heat_exchanger__pipes}
@@ -48,8 +59,8 @@ BHE::BHE_1U createBHE1U(
     //! \ogs_file_param{prj__processes__process__HEAT_TRANSPORT_BHE__borehole_heat_exchangers__borehole_heat_exchanger__grout}
     auto const grout = createGroutParameters(config.getConfigSubtree("grout"));
 
+    //! \ogs_file_param{prj__processes__process__HEAT_TRANSPORT_BHE__borehole_heat_exchangers__borehole_heat_exchanger__refrigerant}
     auto const refrigerant =
-        //! \ogs_file_param{prj__processes__process__HEAT_TRANSPORT_BHE__borehole_heat_exchangers__borehole_heat_exchanger__refrigerant}
         createRefrigerantProperties(config.getConfigSubtree("refrigerant"));
 
     auto const flowAndTemperatureControl = createFlowAndTemperatureControl(
@@ -58,8 +69,7 @@ BHE::BHE_1U createBHE1U(
         curves,
         refrigerant);
 
-    return {borehole_geometry, refrigerant, grout, flowAndTemperatureControl,
-            pipes};
+    return {borehole_geometry, refrigerant, grout, flowAndTemperatureControl, pipes, bhe_if_use_python_bc};
 }
 }  // namespace BHE
 }  // namespace HeatTransportBHE

@@ -26,8 +26,10 @@ BHE_1U::BHE_1U(BoreholeGeometry const& borehole,
                RefrigerantProperties const& refrigerant,
                GroutParameters const& grout,
                FlowAndTemperatureControl const& flowAndTemperatureControl,
-               PipeConfiguration1U const& pipes)
-    : BHECommon{borehole, refrigerant, grout, flowAndTemperatureControl},
+               PipeConfiguration1U const& pipes,
+               bool const ifUsePythonBC)
+    : BHECommon{borehole, refrigerant, grout, flowAndTemperatureControl,
+                ifUsePythonBC},
       _pipes(pipes)
 {
     // Initialize thermal resistances.
