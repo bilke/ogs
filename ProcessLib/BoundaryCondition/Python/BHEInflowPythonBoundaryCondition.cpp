@@ -18,7 +18,6 @@
 #include "ProcessLib/Utils/CreateLocalAssemblers.h"
 #include "ProcessLib/Utils/ProcessUtils.h"
 #include "PythonBoundaryConditionLocalAssembler.h"
-#include "ProcessLib/HeatTransportBHE/BHE/BHETypes.h"
 
 namespace ProcessLib
 {
