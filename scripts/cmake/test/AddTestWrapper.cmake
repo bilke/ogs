@@ -17,6 +17,9 @@ endforeach()
 string(STRIP "${CMD}" CMD)
 
 message(STATUS "running command generating test results:\ncd ${case_path} && ${CMD} >${STDOUT_FILE_PATH}")
+if(DEFINED PYTHONPATH)
+    set(ENV{PYTHONPATH} ${PYTHONPATH})
+endif()
 execute_process(
     COMMAND ${WRAPPER_COMMAND} ${WRAPPER_ARGS} ${EXECUTABLE} ${EXECUTABLE_ARGS}
     WORKING_DIRECTORY ${case_path}

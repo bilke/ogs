@@ -10,6 +10,7 @@ find_program(GPROF_PATH gprof DOC "GNU profiler gprof" QUIET)
 find_program(CPPCHECK_TOOL_PATH cppcheck)
 
 find_package(Python COMPONENTS Interpreter Development)
+find_program(VIRTUALENV_TOOL_PATH virtualenv)
 
 # Find bash itself ...
 find_program(BASH_TOOL_PATH bash

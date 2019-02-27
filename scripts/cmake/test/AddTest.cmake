@@ -215,6 +215,25 @@ Use six arguments version of AddTest with absolute and relative tolerances")
         set(TESTER_COMMAND "! ${GREP_TOOL_PATH} definitely ${AddTest_SOURCE_PATH}/${AddTest_NAME}_memcheck.log")
     endif()
 
+    # Setup Python virtualenv
+    if(EXISTS ${AddTest_SOURCE_PATH}/requirements.txt AND
+        NOT EXISTS ${AddTest_BINARY_PATH}/.venv)
+        if(NOT VIRTUALENV_TOOL_PATH)
+            message(STATUS "WARNING: Disabling ${AddTest_NAME} as Python's "
+                           "virtualenv was not found!")
+            return()
+        endif()
+        message(STATUS "Creating virtualenv for ${AddTest_NAME} and installing "
+            "requirements with pip.")
+        execute_process(COMMAND ${VIRTUALENV_TOOL_PATH} .venv
+                --python ${Python_EXECUTABLE}
+            WORKING_DIRECTORY ${AddTest_BINARY_PATH})
+        execute_process(COMMAND .venv/bin/pip install -r
+                ${AddTest_SOURCE_PATH}/requirements.txt
+            WORKING_DIRECTORY ${AddTest_BINARY_PATH})
+        set(PYTHONPATH ${AddTest_BINARY_PATH}/.venv/lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/site-packages)
+    endif()
+
     ## -----------
     if(TARGET ${AddTest_EXECUTABLE})
         set(AddTest_EXECUTABLE_PARSED $<TARGET_FILE:${AddTest_EXECUTABLE}>)
@@ -246,6 +265,7 @@ Use six arguments version of AddTest with absolute and relative tolerances")
         "-DWRAPPER_ARGS=${AddTest_WRAPPER_ARGS}"
         "-DFILES_TO_DELETE=${FILES_TO_DELETE}"
         -DSTDOUT_FILE_PATH=${AddTest_STDOUT_FILE_PATH}
+        -DPYTHONPATH=${PYTHONPATH}
         -P ${PROJECT_SOURCE_DIR}/scripts/cmake/test/AddTestWrapper.cmake
     )
     set_tests_properties(${TEST_NAME} PROPERTIES COST ${AddTest_RUNTIME})
