@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-@Library('jenkins-pipeline@1.0.19') _
+@Library('jenkins-pipeline@1.0.20') _
 
 def stage_required = [build: false, data: false, full: false, docker: false]
 def build_shared = 'ON'
@@ -191,6 +191,7 @@ pipeline {
                   '-DOGS_BUILD_GUI=ON ' +
                   '-DOGS_BUILD_UTILS=ON ' +
                   '-DOGS_BUILD_TESTS=OFF '
+                log = "build-cmake.log"
               }
               build {
                 target="package"
