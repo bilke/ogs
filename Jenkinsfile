@@ -105,8 +105,8 @@ pipeline {
           steps {
             script {
               sh 'git submodule sync'
-              sh 'conan remove --force --system-reqs Qt/5.11.2@bilke/stable'
-              sh 'conan remove --force --system-reqs VTK/8.1.1@bilke/stable'
+              sh 'conan remove --system-reqs Qt/5.11.2@bilke/stable || return 0'
+              sh 'conan remove --system-reqs VTK/8.1.1@bilke/stable || return 0'
               configure {
                 cmakeOptions =
                   "-DBUILD_SHARED_LIBS=${build_shared} " +
