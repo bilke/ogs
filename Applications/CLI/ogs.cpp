@@ -26,6 +26,10 @@
 #include <vtkSmartPointer.h>
 #endif
 
+#ifdef OGS_USE_PDAF
+#include "pdaf.h"
+#endif
+
 // BaseLib
 #include "BaseLib/BuildInfo.h"
 #include "BaseLib/ConfigTreeUtil.h"
@@ -143,6 +147,11 @@ int main(int argc, char* argv[])
 #ifdef OGS_USE_PYTHON
     pybind11::scoped_interpreter guard = ApplicationsLib::setupEmbeddedPython();
     (void)guard;
+#endif
+
+#ifdef OGS_USE_PDAF
+    int a = 5;
+    c_init_parallel_pdaf(&a, &a);
 #endif
 
     BaseLib::RunTime run_time;
