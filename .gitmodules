@@ -34,3 +34,6 @@
 [submodule "ThirdParty/exprtk"]
 	path = ThirdParty/exprtk
 	url = https://github.com/ArashPartow/exprtk.git
+[submodule "ThirdParty/pdaf"]
+	path = ThirdParty/pdaf
+	url = https://github.com/ufz/pdaf-ogs

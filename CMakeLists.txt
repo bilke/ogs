@@ -202,6 +202,8 @@ endif()
 # MKL
 option(OGS_USE_MKL "Use Intel MKL" OFF)
 
+option(OGS_USE_PDAF "Use Parallel Data Assimilation Framework" OFF)
+
 # Logging
 set(OGS_LOG_LEVEL "LOGOG_LEVEL_DEBUG" CACHE STRING "Set logging level included in compilation.")
 set_property(CACHE OGS_LOG_LEVEL PROPERTY STRINGS
@@ -301,6 +303,14 @@ if(MSVC AND OGS_32_BIT)
     add_definitions(-DEIGEN_MAX_ALIGN_BYTES=0 -DEIGEN_DONT_ALIGN)
 endif()
 # End Eigen
+
+if(OGS_USE_PDAF)
+    #if(NOT OGS_USE_MPI)
+    #    message(FATAL_ERROR "OGS_USE_PDAF requires OGS_USE_MPI!")
+    #endif()
+    add_definitions(-DOGS_USE_PDAF)
+    enable_language(Fortran)
+endif()
 
 if (OGS_FATAL_ABORT)
     add_definitions(-DOGS_FATAL_ABORT)

@@ -88,3 +88,7 @@ endif()
 if(OGS_BUILD_UTILS)
     include(${PROJECT_SOURCE_DIR}/scripts/cmake/MetisSetup.cmake)
 endif()
+
+if(OGS_USE_PDAF)
+    add_subdirectory(pdaf)
+endif()

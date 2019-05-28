@@ -19,7 +19,7 @@ endif()
 set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
 set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
 
-if(COMPILER_IS_CLANG)
+if(COMPILER_IS_CLANG AND NOT OGS_USE_PDAF)
     add_compile_options(-Qunused-arguments)
 endif()
 
