@@ -62,7 +62,7 @@ endif()
 
 if(OGS_USE_PDAF)
     add_library(ogs_pdaf pdaf.f90)
-    target_link_libraries(ogs_pdaf PUBLIC pdaf)
+    target_link_libraries(ogs_pdaf PUBLIC pdaf INTERFACE gfortran)
     target_link_libraries(ogs PRIVATE ogs_pdaf)
 endif()
 
