@@ -101,11 +101,6 @@ int main(int argc, char* argv[])
                                                "LOG_LEVEL");
     cmd.add(log_level_arg);
 
-#ifdef OGS_USE_PDAF
-    int a = 5;
-    c_init_parallel_pdaf(&a, &a);
-#endif
-
     TCLAP::SwitchArg nonfatal_arg("",
                                   "config-warnings-nonfatal",
                                   "warnings from parsing the configuration "
@@ -152,6 +147,11 @@ int main(int argc, char* argv[])
 #ifdef OGS_USE_PYTHON
     pybind11::scoped_interpreter guard = ApplicationsLib::setupEmbeddedPython();
     (void)guard;
+#endif
+
+#ifdef OGS_USE_PDAF
+    int a = 5;
+    c_init_parallel_pdaf(&a, &a);
 #endif
 
     BaseLib::RunTime run_time;
