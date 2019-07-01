@@ -133,12 +133,14 @@ pipeline {
                 } }
               }
             }
-            stage('build') {
-              steps {
-                script { build {
-                  target="package"
-                  log="build2.log"
-                } }
+            stages {
+              stage('build python') {
+                steps {
+                  script { build {
+                    target="package"
+                    log="build2.log"
+                  } }
+                }
               }
             }
             post {
