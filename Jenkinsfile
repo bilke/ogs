@@ -123,7 +123,6 @@ pipeline {
             stage('build') {
               steps {
                 build { target="package" log="build1.log" }
-                }
               }
             }
             stage('configure with python') {
