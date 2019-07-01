@@ -133,26 +133,12 @@ pipeline {
                 } }
               }
             }
-            stages {
-              stage('build python') {
-                steps {
-                  script { build {
-                    target="package"
-                    log="build2.log"
-                  } }
-                }
-              }
-            }
-            post {
-              always {
-                recordIssues enabledForFailure: true, filters: [
-                  excludeFile('.*qrc_icons\\.cpp.*'), excludeFile('.*QVTKWidget.*'),
-                  excludeMessage('.*tmpnam.*')],
-                  tools: [gcc4(name: 'GCC', pattern: 'build/build*.log')],
-                  unstableTotalAll: 1
-              }
-              success {
-                archiveArtifacts 'build/*.tar.gz,build/conaninfo.txt'
+            stage('build') {
+              steps {
+                script { build {
+                  target="package"
+                  log="build2.log"
+                } }
               }
             }
             stage('tests') {
@@ -160,20 +146,9 @@ pipeline {
                 script { build { target="tests" } }
               }
             }
-            post {
-              always {
-                xunit([GoogleTest(pattern: 'build/Tests/testrunner.xml')])
-              }
-            }
             stage('benchmarks') {
               steps {
                 script { build { target="ctest" } }
-              }
-            }
-            post {
-              always {
-                // Testing/-folder is a CTest convention
-                xunit([CTest(pattern: 'build/Testing/**/*.xml')])
               }
             }
             stage('doxygen') {
@@ -181,23 +156,32 @@ pipeline {
                 script { build { target="doc" } }
               }
             }
-            post {
-              always {
+          }
+          post {
+            always {
+              // Testing/-folder is a CTest convention
+              xunit([CTest(pattern: 'build/Testing/**/*.xml')])
+              xunit([GoogleTest(pattern: 'build/Tests/testrunner.xml')])
+              recordIssues enabledForFailure: true, filters: [
+                  excludeFile('-'), excludeFile('.*Functional\\.h'),
+                  excludeFile('.*gmock-.*\\.h'), excludeFile('.*gtest-.*\\.h')
+                ],
+                // Doxygen is handled by gcc4 parser as well
+                tools: [gcc4(name: 'Doxygen', id: 'doxygen',
+                             pattern: 'build/DoxygenWarnings.log')],
+                unstableTotalAll: 1
                 recordIssues enabledForFailure: true, filters: [
-                    excludeFile('-'), excludeFile('.*Functional\\.h'),
-                    excludeFile('.*gmock-.*\\.h'), excludeFile('.*gtest-.*\\.h')
-                  ],
-                  // Doxygen is handled by gcc4 parser as well
-                  tools: [gcc4(name: 'Doxygen', id: 'doxygen',
-                               pattern: 'build/DoxygenWarnings.log')],
+                  excludeFile('.*qrc_icons\\.cpp.*'), excludeFile('.*QVTKWidget.*'),
+                  excludeMessage('.*tmpnam.*')],
+                  tools: [gcc4(name: 'GCC', pattern: 'build/build*.log')],
                   unstableTotalAll: 1
-              }
-              success {
-                publishHTML(target: [allowMissing: false, alwaysLinkToLastBuild: true,
-                  keepAll: true, reportDir: 'build/docs', reportFiles: 'index.html',
-                  reportName: 'Doxygen'])
-                dir('build/docs') { stash(name: 'doxygen') } // TODO: on master only
-              }
+            }
+            success {
+              archiveArtifacts 'build/*.tar.gz,build/conaninfo.txt'
+              publishHTML(target: [allowMissing: false, alwaysLinkToLastBuild: true,
+                keepAll: true, reportDir: 'build/docs', reportFiles: 'index.html',
+                reportName: 'Doxygen'])
+              dir('build/docs') { stash(name: 'doxygen') } // TODO: on master only
             }
           }
         }
