@@ -111,34 +111,34 @@ pipeline {
             stage('configure') {
               steps {
                 sh 'git submodule sync'
-                configure {
+                script { configure {
                   cmakeOptions =
                     "-DBUILD_SHARED_LIBS=${build_shared} " +
                     '-DOGS_CPU_ARCHITECTURE=generic ' +
                     '-DOGS_BUILD_UTILS=ON ' +
                     '-DOGS_USE_CVODE=ON '
-                }
+                } }
               }
             }
             stage('build') {
               steps {
-                build { target="package" log="build1.log" }
+                script { build { target="package" log="build1.log" } }
               }
             }
             stage('configure with python') {
               steps {
-                configure { // CLI + Python
+                script { configure { // CLI + Python
                   cmakeOptions = '-DOGS_USE_PYTHON=ON '
                   keepDir = true
-                }
+                } }
               }
             }
             stage('build') {
               steps {
-                build {
+                script { build {
                   target="package"
                   log="build2.log"
-                }
+                } }
               }
             }
             post {
@@ -155,7 +155,7 @@ pipeline {
             }
             stage('tests') {
               steps {
-                build { target="tests" }
+                script { build { target="tests" } }
               }
             }
             post {
@@ -165,7 +165,7 @@ pipeline {
             }
             stage('benchmarks') {
               steps {
-                build { target="ctest" }
+                script { build { target="ctest" } }
               }
             }
             post {
@@ -176,7 +176,7 @@ pipeline {
             }
             stage('doxygen') {
               steps {
-                build { target="doc" }
+                script { build { target="doc" } }
               }
             }
             post {
