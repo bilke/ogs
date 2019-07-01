@@ -107,60 +107,96 @@ pipeline {
           environment {
             OMP_NUM_THREADS = '1'
           }
-          steps {
-            script {
-              sh 'git submodule sync'
-              configure {
-                cmakeOptions =
-                  "-DBUILD_SHARED_LIBS=${build_shared} " +
-                  '-DOGS_CPU_ARCHITECTURE=generic ' +
-                  '-DOGS_BUILD_UTILS=ON ' +
-                  '-DOGS_USE_CVODE=ON '
+          stages {
+            stage('configure') {
+              steps {
+                sh 'git submodule sync'
+                configure {
+                  cmakeOptions =
+                    "-DBUILD_SHARED_LIBS=${build_shared} " +
+                    '-DOGS_CPU_ARCHITECTURE=generic ' +
+                    '-DOGS_BUILD_UTILS=ON ' +
+                    '-DOGS_USE_CVODE=ON '
+                }
               }
-              build {
-                target="package"
-                log="build1.log"
-              }
-              configure { // CLI + Python
-                cmakeOptions = '-DOGS_USE_PYTHON=ON '
-                keepDir = true
-              }
-              build {
-                target="package"
-                log="build2.log"
-              }
-              build { target="tests" }
-              build { target="ctest" }
-              build { target="doc" }
             }
-          }
-          post {
-            always {
-              xunit([
+            stage('build') {
+              steps {
+                build { target="package", log="build1.log" }
+                }
+              }
+            }
+            stage('configure with python') {
+              steps {
+                configure { // CLI + Python
+                  cmakeOptions = '-DOGS_USE_PYTHON=ON '
+                  keepDir = true
+                }
+              }
+            }
+            stage('build') {
+              steps {
+                build {
+                  target="package"
+                  log="build2.log"
+                }
+              }
+            }
+            post {
+              always {
+                recordIssues enabledForFailure: true, filters: [
+                  excludeFile('.*qrc_icons\\.cpp.*'), excludeFile('.*QVTKWidget.*'),
+                  excludeMessage('.*tmpnam.*')],
+                  tools: [gcc4(name: 'GCC', pattern: 'build/build*.log')],
+                  unstableTotalAll: 1
+              }
+              success {
+                archiveArtifacts 'build/*.tar.gz,build/conaninfo.txt'
+              }
+            }
+            stage('tests') {
+              steps {
+                build { target="tests" }
+              }
+            }
+            post {
+              always {
+                xunit([GoogleTest(pattern: 'build/Tests/testrunner.xml')])
+              }
+            }
+            stage('benchmarks') {
+              steps {
+                build { target="ctest" }
+              }
+            }
+            post {
+              always {
                 // Testing/-folder is a CTest convention
-                CTest(pattern: 'build/Testing/**/*.xml'),
-                GoogleTest(pattern: 'build/Tests/testrunner.xml')
-              ])
-              recordIssues enabledForFailure: true, filters: [
-                excludeFile('.*qrc_icons\\.cpp.*'), excludeFile('.*QVTKWidget.*'),
-                excludeMessage('.*tmpnam.*')],
-                tools: [gcc4(name: 'GCC', pattern: 'build/build*.log')],
-                unstableTotalAll: 1
-              recordIssues enabledForFailure: true, filters: [
-                  excludeFile('-'), excludeFile('.*Functional\\.h'),
-                  excludeFile('.*gmock-.*\\.h'), excludeFile('.*gtest-.*\\.h')
-                ],
-                // Doxygen is handled by gcc4 parser as well
-                tools: [gcc4(name: 'Doxygen', id: 'doxygen',
-                             pattern: 'build/DoxygenWarnings.log')],
-                unstableTotalAll: 1
+                xunit([CTest(pattern: 'build/Testing/**/*.xml')])
+              }
             }
-            success {
-              publishHTML(target: [allowMissing: false, alwaysLinkToLastBuild: true,
+            stage('doxygen') {
+              steps {
+                build { target="doc" }
+              }
+            }
+            post {
+              always {
+                recordIssues enabledForFailure: true, filters: [
+                    excludeFile('-'), excludeFile('.*Functional\\.h'),
+                    excludeFile('.*gmock-.*\\.h'), excludeFile('.*gtest-.*\\.h')
+                  ],
+                  // Doxygen is handled by gcc4 parser as well
+                  tools: [gcc4(name: 'Doxygen', id: 'doxygen',
+                               pattern: 'build/DoxygenWarnings.log')],
+                  unstableTotalAll: 1
+              }
+              success {
+                publishHTML(target: [allowMissing: false, alwaysLinkToLastBuild: true,
                   keepAll: true, reportDir: 'build/docs', reportFiles: 'index.html',
                   reportName: 'Doxygen'])
-              archiveArtifacts 'build/*.tar.gz,build/conaninfo.txt'
-              dir('build/docs') { stash(name: 'doxygen') }
+                dir('build/docs') { stash(name: 'doxygen') } // TODO: on master only
+              }
             }
           }
         }
