@@ -122,7 +122,7 @@ pipeline {
             }
             stage('build') {
               steps {
-                build { target="package", log="build1.log" }
+                build { target="package" log="build1.log" }
                 }
               }
             }
