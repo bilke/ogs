@@ -14,13 +14,13 @@ pipeline {
   }
   parameters {
     booleanParam(name: 'docker_conan', defaultValue: true)
-    booleanParam(name: 'docker_conan_debug', defaultValue: true)
-    booleanParam(name: 'docker_conan_gui', defaultValue: true)
-    booleanParam(name: 'eve_serial', defaultValue: true)
-    booleanParam(name: 'eve_parallel', defaultValue: true)
-    booleanParam(name: 'win', defaultValue: true)
-    booleanParam(name: 'mac', defaultValue: true)
-    booleanParam(name: 'clang_analyzer', defaultValue: true)
+    booleanParam(name: 'docker_conan_debug', defaultValue: false)
+    booleanParam(name: 'docker_conan_gui', defaultValue: false)
+    booleanParam(name: 'eve_serial', defaultValue: false)
+    booleanParam(name: 'eve_parallel', defaultValue: false)
+    booleanParam(name: 'win', defaultValue: false)
+    booleanParam(name: 'mac', defaultValue: false)
+    booleanParam(name: 'clang_analyzer', defaultValue: false)
   }
   stages {
      // *************************** Git Check **********************************
