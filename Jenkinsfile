@@ -133,7 +133,7 @@ pipeline {
                 } }
               }
             }
-            stage('build') {
+            stage('build with python') {
               steps {
                 script { build {
                   target="package"
