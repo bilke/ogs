@@ -49,8 +49,6 @@ find_program(MODULE_CMD modulecmd
 ######################
 ### Find libraries ###
 ######################
-find_package(Boost 1.62.0 REQUIRED)
-
 set(VTK_COMPONENTS vtkIOXML)
 if(OGS_BUILD_GUI)
     set(VTK_COMPONENTS ${VTK_COMPONENTS}
@@ -63,11 +61,18 @@ endif()
 if(OGS_USE_MPI)
     set(VTK_COMPONENTS ${VTK_COMPONENTS} vtkIOParallelXML vtkParallelMPI)
 endif()
-find_package(VTK 8.1.2 REQUIRED COMPONENTS ${VTK_COMPONENTS})
-include(${VTK_USE_FILE})
 
-find_package(Eigen3 3.3.4 REQUIRED)
-include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
+if(OGS_USE_CONAN)
+    find_package(boost REQUIRED)
+    find_package(vtk REQUIRED CONFIG COMPONENTS ${VTK_COMPONENTS})
+    find_package(eigen REQUIRED CONFIG)
+else()
+    find_package(Boost 1.62.0 REQUIRED)
+    find_package(VTK 8.1.2 REQUIRED COMPONENTS ${VTK_COMPONENTS})
+    include(${VTK_USE_FILE})
+    find_package(Eigen3 3.3.4 REQUIRED)
+    include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
+endif()
 
 ## pthread, is a requirement of logog ##
 set(CMAKE_THREAD_PREFER_PTHREAD ON)

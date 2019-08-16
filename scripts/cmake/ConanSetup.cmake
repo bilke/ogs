@@ -10,12 +10,6 @@ if(NOT CONAN_CMD)
     return()
 endif()
 
-
-if(CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
-    message(FATAL_ERROR "Multi-config generators are not yet supported when "
-        "using Conan. Specify CMAKE_BUILD_TYPE!")
-endif()
-
 # $ cat /etc/os-release | grep VERSION_ID
 # VERSION_ID="17.10"
 if(COMPILER_IS_GCC AND CMAKE_CXX_COMPILER_VERSION VERSION_EQUAL 6 AND UBUNTU_VERSION VERSION_EQUAL 16)
@@ -149,7 +143,7 @@ conan_cmake_run(
     OPTIONS ${CONAN_OPTIONS}
     BUILD ${OGS_CONAN_BUILD}
     IMPORTS ${CONAN_IMPORTS}
-    GENERATORS virtualrunenv
+    GENERATORS cmake_find_package_multi virtualenv
     BUILD_TYPE ${CONAN_BUILD_TYPE}
 )
 if(MSVC)

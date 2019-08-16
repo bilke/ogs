@@ -8,14 +8,12 @@ endif()
 
 # Set additional CMake modules path
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+  ${PROJECT_BINARY_DIR} # Conan
   "${PROJECT_SOURCE_DIR}/scripts/cmake"
   "${PROJECT_SOURCE_DIR}/ThirdParty/cmake-modules"
   "${PROJECT_SOURCE_DIR}/ThirdParty/jedbrown-cmake-modules")
 
-list(APPEND CMAKE_PREFIX_PATH
-  $ENV{HOMEBREW_ROOT}             # Homebrew package manager on Mac OS
-  $ENV{CMAKE_LIBRARY_SEARCH_PATH} # Environment variable, Windows
-  ${CMAKE_LIBRARY_SEARCH_PATH})   # CMake option, Windows
+list(APPEND CMAKE_PREFIX_PATH ${PROJECT_BINARY_DIR})
 
 # Load addional modules
 include(GNUInstallDirs)
@@ -29,8 +27,7 @@ if(NOT PROJECT_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     set(OGS_BUILD_CLI OFF CACHE BOOL "" FORCE)
 endif()
 
-if((NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-    OR (NOT CMAKE_BUILD_TYPE AND MSVC AND OGS_USE_CONAN))
+if((NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES))
     message(STATUS "Setting build type to 'Debug' as none was specified.")
     set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build." FORCE)
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
