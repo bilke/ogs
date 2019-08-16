@@ -25,7 +25,10 @@ if(OGS_USE_CONAN)
 endif()
 
 if(OGS_BUILD_GUI)
-    install_qt5_plugin("Qt5::QWindowsIntegrationPlugin" QT_PLUGINS)
+    # TODO: does packaging still work?
+    if(NOT OGS_USE_CONAN)
+        install_qt5_plugin("Qt5::QWindowsIntegrationPlugin" QT_PLUGINS)
+    endif()
     file(WRITE "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/qt.conf"
         "[Paths]\nPlugins = ../${_qt_plugin_dir}\n")
     install(FILES "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/qt.conf"

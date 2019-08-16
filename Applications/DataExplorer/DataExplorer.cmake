@@ -65,12 +65,6 @@ if(NOT APPLE AND OGS_USE_CONAN)
     endif()
 endif()
 
-# Workaround for Windows conan tiff-package
-if(OGS_USE_CONAN AND WIN32)
-    find_package(ZLIB REQUIRED)
-    target_link_libraries(DataExplorer ${ZLIB_LIBRARIES})
-endif()
-
 if(GEOTIFF_FOUND)
     target_link_libraries(DataExplorer ${GEOTIFF_LIBRARIES} )
 endif()
