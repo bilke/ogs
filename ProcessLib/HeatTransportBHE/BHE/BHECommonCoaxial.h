@@ -68,8 +68,9 @@ public:
     double cross_section_area_inner_pipe, cross_section_area_annulus,
         cross_section_area_grout;
 
-protected:
     void updateHeatTransferCoefficients(double const flow_rate);
+
+protected:
 
     PipeConfigurationCoaxial const _pipes;
 
