@@ -186,6 +186,7 @@ std::unique_ptr<Process> createHeatTransportBHEProcess(
         // clear ogs bc_node_id memory in dataframe
         std::get<4>(py_object->dataframe_network).clear();  // ogs_bc_node_id
 
+        /* for 2U type the flowrate initialization process below causes conflict
         // replace the value in flow velocity Matrix _u
         auto const tespy_flow_rate = std::get<5>(py_object->dataframe_network);
         const std::size_t n_bhe = tespy_flow_rate.size();
@@ -203,6 +204,7 @@ std::unique_ptr<Process> createHeatTransportBHEProcess(
             };
             visit(update_flow_rate, bhes[idx_bhe]);
         }
+        */
 #else
         OGS_FATAL(
             "Input files suggest the coupling of BHE with pipe network. "
