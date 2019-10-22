@@ -17,8 +17,8 @@
 #include "ProcessLib/HeatTransportBHE/LocalAssemblers/HeatTransportBHELocalAssemblerBHE.h"
 #include "ProcessLib/HeatTransportBHE/LocalAssemblers/HeatTransportBHELocalAssemblerSoil.h"
 
-#include "ProcessLib/BoundaryCondition/BHEBottomDirichletBoundaryCondition.h"
-#include "ProcessLib/BoundaryCondition/BHEInflowDirichletBoundaryCondition.h"
+#include "BoundaryConditions/BHEBottomDirichletBoundaryCondition.h"
+#include "BoundaryConditions/BHEInflowDirichletBoundaryCondition.h"
 #include "ProcessLib/BoundaryCondition/Python/BHEInflowPythonBoundaryCondition.h"
 
 namespace ProcessLib
@@ -306,9 +306,7 @@ void HeatTransportBHEProcess::createBHEBoundaryConditionTopBottom(
                             ProcessLib::createBHEInflowPythonBoundaryCondition(
                                 get_global_bhe_bc_indices(bc_top_node_id,
                                                           in_out_component_id),
-                        [&bhe](double const T, double const t) {
-                            return bhe.updateFlowRateAndTemperature(T, t);
-                        },
+                        bhe,
 						*(_process_data.py_bc_object)));
                     }
                     else
@@ -327,7 +325,7 @@ void HeatTransportBHEProcess::createBHEBoundaryConditionTopBottom(
                 {
                     // Top, inflow, normal case
                     bcs.addBoundaryCondition(
-                        ProcessLib::createBHEInflowDirichletBoundaryCondition(
+                        createBHEInflowDirichletBoundaryCondition(
                             get_global_bhe_bc_indices(bc_top_node_id,
                                                       in_out_component_id),
                         [&bhe](double const T, double const t) {
@@ -336,7 +334,7 @@ void HeatTransportBHEProcess::createBHEBoundaryConditionTopBottom(
                 }
                 // Bottom, outflow, all cases
                 bcs.addBoundaryCondition(
-                    ProcessLib::createBHEBottomDirichletBoundaryCondition(
+                    createBHEBottomDirichletBoundaryCondition(
                         get_global_bhe_bc_indices(bc_bottom_node_id,
                                                   in_out_component_id)));
             }
