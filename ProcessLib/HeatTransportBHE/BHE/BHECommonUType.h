@@ -28,8 +28,9 @@ public:
                    GroutParameters const& grout,
                    FlowAndTemperatureControl const& flowAndTemperatureControl,
                    PipeConfigurationUType const& pipes,
-				   bool const ifUsePythonBC)
-        : BHECommon{borehole, refrigerant, grout, flowAndTemperatureControl, ifUsePythonBC},
+                   bool const usePythonBC)
+        : BHECommon{borehole, refrigerant, grout, flowAndTemperatureControl,
+                    usePythonBC},
           _pipes(pipes)
     {
     }
