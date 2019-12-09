@@ -243,7 +243,7 @@ Use six arguments version of AddTest with absolute and relative tolerances")
         COMMAND ${CMAKE_COMMAND}
         -DEXECUTABLE=${AddTest_EXECUTABLE_PARSED}
         "-DEXECUTABLE_ARGS=${AddTest_EXECUTABLE_ARGS}" # Quoted because passed as list
-        -Dcase_path=${AddTest_SOURCE_PATH}             # see https://stackoverflow.com/a/33248574/80480
+        -DSOURCE_PATH=${AddTest_SOURCE_PATH}           # see https://stackoverflow.com/a/33248574/80480
         -DBINARY_PATH=${AddTest_BINARY_PATH}
         -DWRAPPER_COMMAND=${WRAPPER_COMMAND}
         "-DWRAPPER_ARGS=${AddTest_WRAPPER_ARGS}"
@@ -252,6 +252,14 @@ Use six arguments version of AddTest with absolute and relative tolerances")
         -P ${PROJECT_SOURCE_DIR}/scripts/cmake/test/AddTestWrapper.cmake
     )
     set_tests_properties(${TEST_NAME} PROPERTIES COST ${AddTest_RUNTIME})
+    if(EXISTS ${AddTest_SOURCE_PATH}/requirements.txt)
+        set(PYTHONPATH "${AddTest_BINARY_PATH}/.venv/lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages")
+        if(WIN32)
+            set(PYTHONPATH "${AddTest_BINARY_PATH}/.venv/Lib/site-packages")
+        endif()
+        set_tests_properties(${TEST_NAME} PROPERTIES
+            ENVIRONMENT "PYTHONPATH=${PYTHONPATH}")
+    endif()
 
     if(TARGET ${AddTest_EXECUTABLE})
         add_dependencies(ctest ${AddTest_EXECUTABLE})

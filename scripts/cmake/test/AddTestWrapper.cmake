@@ -16,10 +16,27 @@ foreach(A ${EXECUTABLE_ARGS})
 endforeach()
 string(STRIP "${CMD}" CMD)
 
-message(STATUS "running command generating test results:\ncd ${case_path} && ${CMD} >${STDOUT_FILE_PATH}")
+# Create Python virtual environment and install packages
+if(EXISTS ${SOURCE_PATH}/requirements.txt AND NOT EXISTS ${BINARY_PATH}/.venv)
+    message(STATUS "Generating Python virtual environment...")
+    execute_process(
+        COMMAND virtualenv .venv
+        WORKING_DIRECTORY ${BINARY_PATH}
+    )
+    set(PIP_EXE .venv/bin/pip)
+    if(WIN32)
+        set(PIP_EXE .venv/Scripts/pip.exe)
+    endif()
+    execute_process(
+        COMMAND ${PIP_EXE} install -r ${SOURCE_PATH}/requirements.txt
+        WORKING_DIRECTORY ${BINARY_PATH}
+    )
+endif()
+
+message(STATUS "running command generating test results:\ncd ${SOURCE_PATH} && ${CMD} >${STDOUT_FILE_PATH}")
 execute_process(
     COMMAND ${WRAPPER_COMMAND} ${WRAPPER_ARGS} ${EXECUTABLE} ${EXECUTABLE_ARGS}
-    WORKING_DIRECTORY ${case_path}
+    WORKING_DIRECTORY ${SOURCE_PATH}
     RESULT_VARIABLE EXIT_CODE
     # OUTPUT_FILE ${STDOUT_FILE_PATH} # must be used exclusively
     OUTPUT_VARIABLE OUTPUT
