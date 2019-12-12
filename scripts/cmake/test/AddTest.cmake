@@ -73,7 +73,7 @@ function (AddTest)
     # --- Implement wrappers ---
     # check requirements, disable if not met
     if(${AddTest_REQUIREMENTS})
-        # message(STATUS "Enabling test ${AddTest_NAME}.")
+        message(DEBUG "Enabling test ${AddTest_NAME}.")
     else()
         set(DISABLED_TESTS_LOG "${DISABLED_TESTS_LOG}\nRequirement ${AddTest_REQUIREMENTS} not met! Disabling test ${AddTest_NAME}." CACHE INTERNAL "")
         return()
@@ -248,7 +248,6 @@ Use six arguments version of AddTest with absolute and relative tolerances")
         -DWRAPPER_COMMAND=${WRAPPER_COMMAND}
         "-DWRAPPER_ARGS=${AddTest_WRAPPER_ARGS}"
         "-DFILES_TO_DELETE=${FILES_TO_DELETE}"
-        -DSTDOUT_FILE_PATH=${AddTest_STDOUT_FILE_PATH}
         -P ${PROJECT_SOURCE_DIR}/scripts/cmake/test/AddTestWrapper.cmake
     )
     set_tests_properties(${TEST_NAME} PROPERTIES COST ${AddTest_RUNTIME})
